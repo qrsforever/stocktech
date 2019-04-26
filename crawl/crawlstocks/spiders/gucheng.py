@@ -72,9 +72,6 @@ class CrawlFinancialInfoSpider(CrawlSpider):
 
     def deal_links(self, links):
         # 链接追加财务分析项, 注意最后的"/"符号, 避免redirect
-        #  for link in links:
-        #    link.url = os.path.join(link.url, "caiwufenxi/")
-        #  return links
         for link in links:
             if '国债' in link.text:
                 continue

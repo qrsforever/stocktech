@@ -3,7 +3,9 @@
 
 from scrapy import signals
 
-class CrawlstocksDownloaderMiddleware(object):
+# from crawlstocks.exceptions import DownloadException
+
+class CatchExceptionMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
@@ -44,7 +46,7 @@ class CrawlstocksDownloaderMiddleware(object):
         # - return None: continue processing this exception
         # - return a Response object: stops process_exception() chain
         # - return a Request object: stops process_exception() chain
-        pass
+        spider.logger.warn('Middleware: %s exception caught', exception.__class__.__name__)
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)

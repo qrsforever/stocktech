@@ -26,26 +26,28 @@ scrapy startproject crawlstocks .
 
 # 创建网虫
 
-## 爬取所有股票信息, 供其他模块使用
-
-- `scrapy genspider GuchengStockList hq.gucheng.com`
-
-## 独立模块, 完成不能的功能
-
-- `scrapy genspider --template=crawl GuchengStockInfo hq.gucheng.com`
-- `scrapy genspider EastmoneyStockUrls`
-- `scrapy genspider EastmoneyStockCwzb`
-- `scrapy genspider QuotesMoney163`
+- `scrapy genspider [--template=crawl] xxx hq.gucheng.com`
 
 # 执行
 
-- 下载所有的股票码, 供下面的几个模块使用: `scrapy crawl GuchengStockList`
+`scrapy list`
 
-- 下载股城网个股基本信息: `scrapy crawl GuchengStockInfo`
+```
+2019-04-26 17:08:10 [stdout] INFO eastmoney.cwzb
+2019-04-26 17:08:10 [stdout] INFO eastmoney.url
+2019-04-26 17:08:10 [stdout] INFO gucheng.blockcode
+2019-04-26 17:08:10 [stdout] INFO gucheng.financialinfo
+2019-04-26 17:08:10 [stdout] INFO gucheng.stockcode
+2019-04-26 17:08:10 [stdout] INFO netease163.chddata
+```
 
-- 从东方财富网下载个股的URLS: `scrapy crawl EastmoneyStockUrls`
+- 下载所有的股票码, 供下面的几个模块使用: `scrapy crawl gucheng.stockcode`
 
-- 下载财务数据: `scrapy crawl EastmoneyStockCwzb -a filename=xxx/xxx/stock_urls.txt`
+- 下载股城网个股财务信息: `scrapy crawl gucheng.financialinfo`
+
+- 从东方财富网下载个股的URLS: `scrapy crawl eastmoney.url`
+
+- 下载财务数据: `scrapy crawl eastmoney.cwzb -a filename=xxx/xxx/stock_urls.txt`
 
    **依赖scrapy-splash,实现异步转同步**
 
@@ -55,7 +57,7 @@ scrapy startproject crawlstocks .
 
 ## GuchengStockList
 
-从股城网爬取当日所有股票码和股票名字, 分别存到文件`stock_urls.txt`和mongo数据库
+从股城网爬取当日所有股票码和股票名字, 分别存到文件`stock_codes.txt`和mongo数据库
 `stock.codes`中.
 
 ## QuotesMoney163

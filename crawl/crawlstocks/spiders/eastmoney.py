@@ -37,10 +37,10 @@ class CrawlUrlSpider(scrapy.Spider):
                     continue
                 # 股票代码
                 code = res.groupdict()['code']
-                addr = "sz"
+                loc = "sz"
                 if code[0] == '6':
-                    addr = "sh"
-                item['stock_url'] = 'http://quote.eastmoney.com/' + addr + code + ".html"
+                    loc = "sh"
+                item['stock_url'] = 'http://quote.eastmoney.com/' + loc + code + ".html"
                 yield item
         except:
             self.logger.warn("parse error: %s", response.url)

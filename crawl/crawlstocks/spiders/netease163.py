@@ -12,7 +12,15 @@ class CrawlChdDataSpider(scrapy.Spider):
     allowed_domains = ['quotes.money.163.com']
 
     custom_settings = {
-            'ITEM_PIPELINES' : {'crawlstocks.pipelines.db.netease163.CHDDataPipeline': 100}
+            'SPIDER_MIDDLEWARES': {
+                'crawlstocks.middlewares.spider.CatchExceptionMiddleware': 600,
+                },
+            'DOWNLOADER_MIDDLEWARES': {
+                'crawlstocks.middlewares.download.CatchExceptionMiddleware': 600,
+                },
+            'ITEM_PIPELINES' : {
+                'crawlstocks.pipelines.db.netease163.CHDDataPipeline': 100,
+                }
             }
 
     # def __init__(self, conf, *args, **kwargs):
@@ -27,7 +35,6 @@ class CrawlChdDataSpider(scrapy.Spider):
 
     FIELDS = "TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP"
     URL = 'http://xquotes.money.163.com/service/chddatb.html?'
-
 
     def start_requests(self):
         # mongo = MongoClient(self.conf.get('DB_HOST'))

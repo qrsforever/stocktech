@@ -3,7 +3,7 @@
 
 from scrapy import signals
 
-class CrawlstocksSpiderMiddleware(object):
+class CatchExceptionMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -36,7 +36,9 @@ class CrawlstocksSpiderMiddleware(object):
 
         # Should return either None or an iterable of Response, dict
         # or Item objects.
-        pass
+        spider.logger.warn('Middleware: %s exception caught', exception.__class__.__name__)
+        method = '{}.process_spider_exception'.format(self.__class__.__name__)
+        yield {'processed': [method]}
 
     def process_start_requests(self, start_requests, spider):
         # Called with the start requests of the spider, and works
