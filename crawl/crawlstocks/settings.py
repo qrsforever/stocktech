@@ -11,6 +11,9 @@
 
 import os
 
+OUTPUT_DIR = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), '../../', 'output')
+
 BOT_NAME = 'crawlstocks'
 
 SPIDER_MODULES = ['crawlstocks.spiders']
@@ -62,8 +65,8 @@ TELNETCONSOLE_ENABLED = False
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#     #  'crawlstocks.middlewares.CustomRandomMiddleware.RandomProxyMiddleware': 300,
-#     'crawlstocks.middlewares.CustomRandomMiddleware.RandomUserAgentMiddleware': 543,
+#     #  'crawlstocks.middlewares.random.RandomProxyMiddleware': 300,
+#     'crawlstocks.middlewares.random.RandomUserAgentMiddleware': 543,
 #     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
 # }
 
@@ -104,18 +107,33 @@ TELNETCONSOLE_ENABLED = False
 
 LOG_ENABLED = True
 LOG_ENCODING = 'utf-8'
-# CRITICAL、 ERROR、WARNING、INFO、DEBUG
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'DEBUG' # CRITICAL ERROR WARNING INFO DEBUG
+LOG_FORMAT = '%(asctime)s [%(name)s] %(levelname)s %(message)s'
+LOG_STDOUT = True
+# LOG_FILE = os.path.join(OUTPUT_DIR, 'crawl.log')
 
 ####### 自定义
 
-OUTPUT_DIR = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), '../../', 'output')
+STOCK_CODES_FILE = os.path.join(OUTPUT_DIR, 'stock_codes.txt')
+FINANCIAL_INFO_FILE = os.path.join(OUTPUT_DIR, 'financial_info.txt')
 
-STOCK_LIST_FILE = os.path.join(OUTPUT_DIR, 'stock_list.txt')
-STOCK_INFO_FILE = os.path.join(OUTPUT_DIR, 'stock_info.txt')
 STOCK_URLS_FILE = os.path.join(OUTPUT_DIR, 'stock_urls.txt')
 STOCK_CWZB_FILE = os.path.join(OUTPUT_DIR, 'stock_cwzb.txt')
+
+# MongoDB
+
+DB_HOST = 'mongodb://localhost:27017/'
+DB_NAME = 'stocktech'
+DB_CODES_TABLE_NAME = 'codes'
+DB_CHDDATA_TABLE_NAME = 'chddata'
+# DB_REQUEST_URLS
+
+# Request
+
+DATETIME_START = '20100101'
+DATETIME_END = '20190424'
+
+
 
 # 雄安新区板块
 #  BLOCKINFO_XIONGANXINQUE = '003813'
@@ -173,16 +191,3 @@ USER_AGENT_LIST = [
     'Mozilla/5.0 (X11; U; Linux x86_64; zh-CN; rv:1.9.2.10) Gecko/20100922 Ubuntu/10.10 (maverick) Firefox/3.6.10',
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
 ]
-
-# MongoDB
-
-DB_HOST = 'mongodb://localhost:27017/'
-DB_NAME = 'stock'
-DB_CODES_TABLE_NAME = 'codes'
-DB_CHDDATA_TABLE_NAME = 'chddata'
-
-
-# Request
-
-DATETIME_START = '20100101'
-DATETIME_END = '20190424'
