@@ -11,8 +11,9 @@
 
 import os
 
-OUTPUT_DIR = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), '../../', 'output')
+# OUTPUT_DIR = os.path.join(
+        # os.path.dirname(os.path.realpath(__file__)), '../../', 'output')
+OUTPUT_DIR = '/media/lidong/udisk/stocktech/files'
 
 BOT_NAME = 'crawlstocks'
 
@@ -128,9 +129,8 @@ DB_ERRORS_COLLECTION_NAME = 'errors'
 
 # Request
 
-DATETIME_START = '20100101'
-DATETIME_END = '20190424'
-
+DATETIME_START = '20140101'
+DATETIME_END = '20190426'
 
 DEFAULT_OPTIONAL_STOCKS = [
 

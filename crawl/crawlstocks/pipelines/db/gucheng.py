@@ -13,7 +13,7 @@ class StockCodePipeline(object):
     def from_crawler(cls, crawler):
         return cls(crawler.settings.get('DB_URI', 'mongodb://localhost:27017/'),
                 crawler.settings.get('DB_NAME', 'stocktech'),
-                crawler.settings.get('DB_CODES_COLLECTION_NAME'), 'codes')
+                crawler.settings.get('DB_CODES_COLLECTION_NAME', 'codes'))
 
     def process_item(self, item, spider):
         try:

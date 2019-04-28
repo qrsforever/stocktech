@@ -13,7 +13,7 @@ from crawlstocks.items.items import CrawlErrorItem
 class CrawlChdDataSpider(scrapy.Spider):
     name = 'netease163.chddata'
     allowed_domains = ['quotes.money.163.com']
-    debug = True
+    debug = False
 
     custom_settings = {
             'SPIDER_MIDDLEWARES': {
@@ -38,7 +38,7 @@ class CrawlChdDataSpider(scrapy.Spider):
     #     return spider
 
     FIELDS = "TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP"
-    URL = 'http://quotes.money.163.com/service/chddatb.html?'
+    URL = 'http://quotes.money.163.com/service/chddata.html?'
 
     def start_requests(self):
         self.client = MongoClient(self.settings.get('DB_URI',
@@ -59,8 +59,7 @@ class CrawlChdDataSpider(scrapy.Spider):
                     self.settings.get('DATETIME_END'),
                     self.FIELDS)
             yield scrapy.Request(link, callback=self.parse_csv, errback=self.err_back)
-            if self.debug:
-                break
+            if self.debug: break
 
     def parse_csv(self, response):
         item = CHDDataItem()
@@ -91,8 +90,7 @@ class CrawlChdDataSpider(scrapy.Spider):
                 item['mcap'] = float(data[14])
                 item['_id'] = item['code'] + '_' + data[0]
                 yield item
-                if self.debug:
-                    break
+                if self.debug: break
             except:
                 self.logger.warn("parse error: %s", line)
 

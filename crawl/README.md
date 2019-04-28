@@ -12,7 +12,8 @@ categories: [stock]
 
 1. `sudo pip3 install -U fake-useragent`
 2. `sudo pip3 install -U scrapy-splash`
-3. `sudo docker run -p 8050:8050 scrapinghub/splash --max-timeout`
+3. `sudo pip3 install -U pymongo`
+4. `sudo docker run -p 8050:8050 scrapinghub/splash`
 
 # 创建工程
 

@@ -51,6 +51,8 @@ class CrawlUrlSpider(scrapy.Spider):
 
 class CrawlCwzbSpider(scrapy.Spider):
     name = 'eastmoney.cwzb'
+    debug = False
+
     allowed_domains = [
             'quote.eastmoney.com',
             'f9.eastmoney.com',
@@ -112,6 +114,7 @@ class CrawlCwzbSpider(scrapy.Spider):
                   callback=self.parse_cwzb,
                   args={'wait': 9.0},
                   )
+            if self.debug: break
 
     # def parse_link(self, response):
     #     link = response.xpath('//a[contains(@href, "cwzb")]/@href').get()

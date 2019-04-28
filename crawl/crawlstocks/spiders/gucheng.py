@@ -13,6 +13,8 @@ from crawlstocks.items.gucheng import FinancialInfoItem
 
 class CrawlStockCodeSpider(scrapy.Spider):
     name = 'gucheng.stockcode'
+    debug = False
+
     allowed_domains = ['hq.gucheng.com']
     start_urls = ['https://hq.gucheng.com/gpdmylb.html']
 
@@ -37,6 +39,7 @@ class CrawlStockCodeSpider(scrapy.Spider):
                 item['name'] = re.sub(r'\s+', '', res.groupdict()['name'])
                 item['code'] = res.groupdict()['code']
                 yield item
+                if self.debug: break
         except:
             self.logger.warn("parse error: %s", response.url)
 
@@ -46,6 +49,8 @@ class CrawlStockCodeSpider(scrapy.Spider):
 
 class CrawlFinancialInfoSpider(CrawlSpider):
     name = 'gucheng.financialinfo'
+    debug = False 
+
     allowed_domains = ['hq.gucheng.com']
     start_urls = ['https://hq.gucheng.com/gpdmylb.html']
 
@@ -81,6 +86,7 @@ class CrawlFinancialInfoSpider(CrawlSpider):
                 continue
             link.url = os.path.join(link.url, "caiwufenxi/")
             yield link
+            if self.debug: break
 
     def parse_item(self, response):
         item = FinancialInfoItem()
