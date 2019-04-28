@@ -80,8 +80,6 @@ TELNETCONSOLE_ENABLED = False
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 # 300(优先级), 注释掉, 使用spider的custom_settings
 # ITEM_PIPELINES = {
-#   'crawlstocks.pipelines.CrawlListPipeline': 300,
-#   'crawlstocks.pipelines.CrawlInfoPipeline': 400,
 # }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -122,16 +120,21 @@ STOCK_CWZB_FILE = os.path.join(OUTPUT_DIR, 'stock_cwzb.txt')
 
 # MongoDB
 
-DB_HOST = 'mongodb://localhost:27017/'
+DB_URI = 'mongodb://localhost:27017/'
 DB_NAME = 'stocktech'
-DB_CODES_TABLE_NAME = 'codes'
-DB_CHDDATA_TABLE_NAME = 'chddata'
-# DB_REQUEST_URLS
+DB_CODES_COLLECTION_NAME = 'codes'
+DB_CHDDATA_COLLECTION_NAME = 'chddata'
+DB_ERRORS_COLLECTION_NAME = 'errors'
 
 # Request
 
 DATETIME_START = '20100101'
 DATETIME_END = '20190424'
+
+
+DEFAULT_OPTIONAL_STOCKS = [
+
+]
 
 
 

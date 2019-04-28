@@ -2,8 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from scrapy import signals
+from twisted.internet.error import ConnectionRefusedError
+from twisted.internet.error import TimeoutError
+from twisted.internet.error import DNSLookupError
+from twisted.internet.error import TCPTimedOutError
+from scrapy.spidermiddlewares.httperror import HttpError
+from crawlstocks.exceptions import DownloadException
 
-# from crawlstocks.exceptions import DownloadException
+# from scrapy.http import Response, Request
 
 class CatchExceptionMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -46,7 +52,22 @@ class CatchExceptionMiddleware(object):
         # - return None: continue processing this exception
         # - return a Response object: stops process_exception() chain
         # - return a Request object: stops process_exception() chain
-        spider.logger.warn('Middleware: %s exception caught', exception.__class__.__name__)
+
+        if isinstance(exception, ConnectionRefusedError):
+            raise DownloadException("ConnectionRefusedError")
+        elif isinstance(exception, TCPTimedOutError):
+            raise DownloadException("TCPTimedOutError")
+        elif isinstance(exception, DNSLookupError):
+            raise DownloadException("DNSLookupError")
+        elif isinstance(exception, TimeoutError):
+            raise DownloadException("TimeoutError")
+        elif isinstance(exception, DNSLookupError):
+            raise DownloadException("DNSLookupError")
+        elif isinstance(exception, HttpError):
+            raise DownloadException("HttpError")
+        else:
+            spider.logger.warn('Middleware: %s exception caught',
+                    exception.__class__.__name__)
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
