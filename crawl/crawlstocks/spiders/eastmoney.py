@@ -8,6 +8,8 @@ from scrapy_splash import SplashRequest
 from crawlstocks.items.eastmoney import StockUrlItem
 from crawlstocks.items.eastmoney import StockCwzbItem
 
+from crawlstocks.utils.common import zone_code
+
 class CrawlUrlSpider(scrapy.Spider):
     name = 'eastmoney.url'
     allowed_domains = [
@@ -35,12 +37,8 @@ class CrawlUrlSpider(scrapy.Spider):
                 res = self.re_code.search(stock)
                 if res is None:
                     continue
-                # 股票代码
-                code = res.groupdict()['code']
-                loc = "sz"
-                if code[0] == '6':
-                    loc = "sh"
-                item['stock_url'] = 'http://quote.eastmoney.com/' + loc + code + ".html"
+                code = zone_code(res.groupdict()['code'])
+                item['stock_url'] = 'http://quote.eastmoney.com/' + code + ".html"
                 yield item
         except:
             self.logger.warn("parse error: %s", response.url)
@@ -63,14 +61,14 @@ class CrawlCwzbSpider(scrapy.Spider):
                 },
             'SPLASH_URL': 'http://localhost:8050',
             'DOWNLOADER_MIDDLEWARES': {
-               'crawlstocks.middlewares.random.RandomUserAgentMiddleware': 543,
-               'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-               'scrapy_splash.SplashCookiesMiddleware': 723,
-               'scrapy_splash.SplashMiddleware': 725,
-               'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+                'crawlstocks.middlewares.random.RandomUserAgentMiddleware': 543,
+                'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+                'scrapy_splash.SplashCookiesMiddleware': 723,
+                'scrapy_splash.SplashMiddleware': 725,
+                'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
                },
             'SPIDER_MIDDLEWARES': {
-               'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+                'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
                },
             'DUPEFILTER_CLASS':'scrapy_splash.SplashAwareDupeFilter',
             'HTTPCACHE_STORAGE': 'scrapy_splash.SplashAwareFSCacheStorage'
@@ -99,6 +97,8 @@ class CrawlCwzbSpider(scrapy.Spider):
     # SplashRequest传递一个等待页面加载时间, cwzb页面加载太慢了....
     # wait time must < splash --max-timeout
     def start_requests(self):
+        count = 0
+        total = len(self.start_urls)
         for url in self.start_urls:
             # 自行解析财务指标中的link
             # yield SplashRequest(url,
@@ -109,7 +109,8 @@ class CrawlCwzbSpider(scrapy.Spider):
             # 直接拼接出, 缺点是如果地址变更就失效, 但是效率高了一倍
             # link = url.replace("quote", "f9") + '#cwzb'
             link = self.re_replace_f9.sub('f9', url) + '#cwzb'
-            self.logger.info("link: %s" % link)
+            self.logger.info("[%.2f] : %s" % (count * 100 / total, link))
+            count += 1
             yield SplashRequest(link,
                   callback=self.parse_cwzb,
                   args={'wait': 9.0},

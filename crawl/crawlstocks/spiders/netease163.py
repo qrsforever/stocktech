@@ -45,8 +45,11 @@ class CrawlChdDataSpider(scrapy.Spider):
             'mongodb://localhost:27017/'))
         db = self.client[self.settings.get('DB_NAME', 'stocktech')]
         self.err_col = db[self.settings.get('DB_ERRORS_COLLECTION_NAME', 'errors')]
-
+        start = self.settings.get('DATETIME_START'),
+        end = self.settings.get('DATETIME_END'),
         col = db[self.settings.get('DB_CODES_COLLECTION_NAME', 'codes')]
+        count = 0
+        total = col.count()
         for each in col.find({}, {'_id':0, 'code':1}):
             code = each['code']
             if code[0] == '6':
@@ -54,10 +57,9 @@ class CrawlChdDataSpider(scrapy.Spider):
             else:
                 code = '1' + code
             link = self.URL + 'code={0}&start={1}&end={2}&fields={3}'.format(
-                    code,
-                    self.settings.get('DATETIME_START'),
-                    self.settings.get('DATETIME_END'),
-                    self.FIELDS)
+                    code, start, end, self.FIELDS)
+            self.logger.info("[%.2f] : %s" % (count * 100 / total, link))
+            count += 1
             yield scrapy.Request(link, callback=self.parse_csv, errback=self.err_back)
             if self.debug: break
 
@@ -115,5 +117,5 @@ class CrawlChdDataSpider(scrapy.Spider):
 
 
 #####################################################################################
-        
+
 

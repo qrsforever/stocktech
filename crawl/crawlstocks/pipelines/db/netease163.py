@@ -11,7 +11,7 @@ class CHDDataPipeline(object):
 
     @classmethod
     def from_crawler(cls, crawler):
-        return cls(crawler.settings.get('DB_HOST', 'mongodb://localhost:27017/'),
+        return cls(crawler.settings.get('DB_URI', 'mongodb://localhost:27027/'),
                 crawler.settings.get('DB_NAME', 'stocktech'),
                 crawler.settings.get('DB_CHDDATA_COLLECTION_NAME', 'chddata'))
 

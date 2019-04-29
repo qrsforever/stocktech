@@ -6,7 +6,7 @@ import scrapy
 # 实时成交量明细
 class TickDetailItem(scrapy.Item):
     _id = scrapy.Field()    # 主键 = code_time
-    code = scrapy.Field()   # 股票代码  
+    code = scrapy.Field()   # 股票代码
     time = scrapy.Field()   # 交易时间
     price = scrapy.Field()  # 成交价格
     change = scrapy.Field() # 涨跌额

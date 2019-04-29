@@ -121,11 +121,12 @@ STOCK_CWZB_FILE = os.path.join(OUTPUT_DIR, 'stock_cwzb.txt')
 
 # MongoDB
 
-DB_URI = 'mongodb://localhost:27017/'
+DB_URI = 'mongodb://localhost:27027/'
 DB_NAME = 'stocktech'
 DB_CODES_COLLECTION_NAME = 'codes'
 DB_CHDDATA_COLLECTION_NAME = 'chddata'
 DB_ERRORS_COLLECTION_NAME = 'errors'
+DB_TICKDETAIL_COLLECTION_NAME = 'tickdetail'
 
 # Request
 
@@ -133,9 +134,8 @@ DATETIME_START = '20140101'
 DATETIME_END = '20190426'
 
 DEFAULT_OPTIONAL_STOCKS = [
-
+    '000725', '300072'
 ]
-
 
 
 # 雄安新区板块

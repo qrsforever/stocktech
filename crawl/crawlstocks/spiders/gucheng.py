@@ -49,7 +49,7 @@ class CrawlStockCodeSpider(scrapy.Spider):
 
 class CrawlFinancialInfoSpider(CrawlSpider):
     name = 'gucheng.financialinfo'
-    debug = False 
+    debug = False
 
     allowed_domains = ['hq.gucheng.com']
     start_urls = ['https://hq.gucheng.com/gpdmylb.html']
@@ -76,7 +76,8 @@ class CrawlFinancialInfoSpider(CrawlSpider):
         return request
 
     def deal_links(self, links):
-        # 链接追加财务分析项, 注意最后的"/"符号, 避免redirect
+        count = 0
+        total = len(links)
         for link in links:
             if '国债' in link.text:
                 continue
@@ -84,7 +85,10 @@ class CrawlFinancialInfoSpider(CrawlSpider):
                 continue
             if '指数' in link.text:
                 continue
+            # 链接追加财务分析项, 注意最后的"/"符号, 避免redirect
             link.url = os.path.join(link.url, "caiwufenxi/")
+            self.logger.info("[%.2f] : %s" % (count * 100 / total, link.url))
+            count += 1
             yield link
             if self.debug: break
 
