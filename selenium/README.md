@@ -14,6 +14,14 @@ categories: [stock]
 
 - `sudo pip3 install -U beautifulsoup4`
 
-- [`mv geckodriver /usr/bin/`](https://github.com/mozilla/geckodriver/releases)
+- [`wget geckodriver`](https://github.com/mozilla/geckodriver/releases)
 
+    ```shell
 
+    bin
+    ├── geckodriver_linux32_v0.24.0
+    ├── geckodriver_linux64_v0.24.0
+    ├── geckodriver_win32_v0.24.0
+    └── geckodriver_win64_v0.24.0
+
+    ```

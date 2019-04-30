@@ -111,7 +111,7 @@ LOG_ENCODING = 'utf-8'
 LOG_LEVEL = 'DEBUG' # CRITICAL ERROR WARNING INFO DEBUG
 LOG_FORMAT = '%(asctime)s [%(name)s] %(levelname)s %(message)s'
 LOG_STDOUT = True
-# LOG_FILE = os.path.join(OUTPUT_DIR, 'crawl.log')
+# LOG_FILE = os.path.join(OUTPUT_DIR, 'scrapy.log')
 
 ####### 自定义
 
