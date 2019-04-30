@@ -42,16 +42,16 @@ class Logger(object):
         self.logger = logger
 
     def debug(self, msg, *args, **kwargs):
-        self.logger.debug(msg, args, kwargs)
+        self.logger.debug(msg, *args, **kwargs)
 
     def info(self, msg, *args, **kwargs):
-        self.logger.info(msg, args, kwargs)
+        self.logger.info(msg, *args, **kwargs)
 
     def warn(self, msg, *args, **kwargs):
-        self.logger.warn(msg, args, kwargs)
+        self.logger.warn(msg, *args, **kwargs)
 
     def error(self, msg, *args, **kwargs):
-        self.logger.error(msg, args, kwargs)
+        self.logger.error(msg, *args, **kwargs)
 
     def critical(self, msg, *args, **kwargs):
-        self.logger.critical(msg, args, kwargs)
+        self.logger.critical(msg, *args, **kwargs)

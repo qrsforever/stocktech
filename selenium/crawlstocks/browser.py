@@ -24,15 +24,19 @@ class Browser(object):
             # Disable flash
             # profile.set_preference('plugin.state.flash', '2')
             # Disable histroy
-            profile.set_preference( "places.history.enabled", False)
+            # profile.set_preference( "places.history.enabled", False)
             self.driver = webdriver.Firefox(
                     firefox_profile = profile,
                     firefox_binary = settings.FIREFOX_BINARY_PATH,
                     executable_path = settings.FIREFOX_EXECUTABLE_PATH,
                     log_path = settings.BROWSER_LOG_FILE)
-            self.driver.implicitly_wait(settings. FIREFOX_IMPLICITLY_WAIT)
+            self.driver.implicitly_wait(settings.FIREFOX_IMPLICITLY_WAIT)
+            self.driver.set_page_load_timeout(settings.FIREFOX_LOAD_TIMEOUT)
             self.driver.maximize_window()
         elif brw_name == 'chrome':
             self.logger.warn('not impl')
         else:
             self.logger.warn('not impl')
+
+    def get_driver(self):
+        return self.driver

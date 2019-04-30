@@ -25,3 +25,10 @@ categories: [stock]
     └── geckodriver_win64_v0.24.0
 
     ```
+
+
+# Usage
+
+- `./main.py list`
+
+- `./main.py crawl taskxxx`

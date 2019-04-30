@@ -11,9 +11,9 @@
 
 import os
 
-# OUTPUT_DIR = os.path.join(
+# FILE_DIR = os.path.join(
         # os.path.dirname(os.path.realpath(__file__)), '../../', 'output')
-OUTPUT_DIR = '/media/lidong/udisk/stocktech/files'
+FILE_DIR = '/media/lidong/udisk/stocktech/files'
 
 BOT_NAME = 'crawlstocks'
 
@@ -111,15 +111,15 @@ LOG_ENCODING = 'utf-8'
 LOG_LEVEL = 'DEBUG' # CRITICAL ERROR WARNING INFO DEBUG
 LOG_FORMAT = '%(asctime)s [%(name)s] %(levelname)s %(message)s'
 LOG_STDOUT = True
-# LOG_FILE = os.path.join(OUTPUT_DIR, 'scrapy.log')
+# LOG_FILE = os.path.join(FILE_DIR, 'scrapy.log')
 
 ####### 自定义
 
-STOCK_CODES_FILE = os.path.join(OUTPUT_DIR, 'stock_codes.txt')
-FINANCIAL_INFO_FILE = os.path.join(OUTPUT_DIR, 'financial_info.txt')
+STOCK_CODES_FILE = os.path.join(FILE_DIR, 'stock_codes.txt')
+FINANCIAL_INFO_FILE = os.path.join(FILE_DIR, 'financial_info.txt')
 
-STOCK_URLS_FILE = os.path.join(OUTPUT_DIR, 'stock_urls.txt')
-STOCK_CWZB_FILE = os.path.join(OUTPUT_DIR, 'stock_cwzb.txt')
+STOCK_URLS_FILE = os.path.join(FILE_DIR, 'stock_urls.txt')
+STOCK_CWZB_FILE = os.path.join(FILE_DIR, 'stock_cwzb.txt')
 
 # MongoDB
 
@@ -134,11 +134,6 @@ DB_TICKDETAIL_COLLECTION_NAME = 'tickdetail'
 
 DATETIME_START = '20140101'
 DATETIME_END = '20190426'
-
-DEFAULT_OPTIONAL_STOCKS = [
-    '000725', '300072'
-]
-
 
 # 雄安新区板块
 #  BLOCKINFO_XIONGANXINQUE = '003813'
