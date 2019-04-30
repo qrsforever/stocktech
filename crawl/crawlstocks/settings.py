@@ -46,7 +46,9 @@ DOWNLOAD_DELAY = 2.5
 
 # Disable cookies (enabled by default)
 # 防止网站封爬虫
-COOKIES_ENABLED = False
+# COOKIES_ENABLED = False
+
+COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 TELNETCONSOLE_ENABLED = False
