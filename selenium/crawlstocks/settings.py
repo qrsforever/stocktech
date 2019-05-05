@@ -33,4 +33,4 @@ DB_NAME = 'stocktech'
 
 # files
 GU_QQ_COOKIES_FILE = os.path.join(FILE_DIR, 'gu_qq_cookies.txt')
-OPTIONAL_CODES_FILE = os.path.join(FILE_DIR, 'optinal_codes.txt')
+GU_QQ_OPTIONALS_FILE = os.path.join(FILE_DIR, 'gu_qq_optionals.txt')

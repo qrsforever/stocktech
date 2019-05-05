@@ -13,7 +13,29 @@ categories: [stock]
 1. `sudo pip3 install -U fake-useragent`
 2. `sudo pip3 install -U scrapy-splash`
 3. `sudo pip3 install -U pymongo`
-4. `sudo docker run -p 8050:8050 scrapinghub/splash`
+4. `sudo docker run -p 8050:8050 scrapinghub/splash`: lastest stable
+   `sudo docker run -p 8050:8050 scrapinghub/splash:master`: lastest development
+   `sudo docker run -p 8050:8050 scrapinghub/splash:3.0`: special version
+	或者
+	```shell
+    # git clone https://github.com/scrapinghub/splash/
+    # cd splash/dockerfiles/splash
+    # sudo cp ./qt-installer-noninteractive.qs /tmp/script.qs
+    # sudo ./provision.sh \
+                   prepare_install \
+                   install_msfonts \
+                   install_extra_fonts \
+                   install_deps \
+                   install_flash \
+                   install_qtwebkit_deps \
+                   install_official_qt \
+                   install_qtwebkit \
+                   install_pyqt5 \
+                   install_python_deps
+
+    # sudo pip3 install splash/
+    # python3 -m splash.server
+	```
 
 # 创建工程
 
@@ -56,15 +78,20 @@ scrapy startproject crawlstocks .
 
 # 网虫
 
-## GuchengStockList
+## gucheng.stockcode
 
 从股城网爬取当日所有股票码和股票名字, 分别存到文件`stock_codes.txt`和mongo数据库
 `stock.codes`中.
 
-## QuotesMoney163
+## netease163.chddata
 
 从网易财经行情中心爬取个股的历史数据, 具体日期范围由`settings.py`设置,数据存到mongo数
 据库`stock.chddata`中.
+
+## tencent.tickdetail
+
+自动登录hu.qq.com将自选code下载到指定文件中, 目前改爬虫由于cookie总有问题, 暂时不通,
+临时使用selenium解决, 参考`selenium/crawlstocks/task/tencent_optional.py`
 
 
 # 数据网站
@@ -112,3 +139,9 @@ response.xpath('//section[has-class("stockTable")]/a/text()').get() ```
 [2]: https://stackoverflow.com/questions/30345623/scraping-dynamic-content-using-python-scrapy
 [3]: https://splash.readthedocs.io/en/stable
 [4]: https://github.com/scrapy-plugins/scrapy-splash
+
+## 修改firefox代理
+
+1. about:config
+2. 右击新建字符串:general.useragent.override:
+   Mozilla/5.0 (X11; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0

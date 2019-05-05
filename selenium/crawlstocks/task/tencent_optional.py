@@ -11,12 +11,14 @@ import crawlstocks.settings as settings
 
 logger = Logger(os.path.basename(__file__))
 
+# 保存cookie
 def _do_save_cookie(browser):
     logger.info('do save cookie')
     cookies = browser.get_cookies()
     with open(settings.GU_QQ_COOKIES_FILE, "w", encoding='utf-8') as f:
         f.write(json.dumps(cookies))
 
+# 加载cookie
 def _do_load_cookie(browser):
     logger.info('do load cookie')
     cookies = []
@@ -76,7 +78,7 @@ def _do_stock_list(browser):
         codes.append(e.get_attribute('id')[2:])
 
     if len(codes) > 0:
-        with open(settings.OPTIONAL_CODES_FILE, "w", encoding='utf-8') as f:
+        with open(settings.GU_QQ_OPTIONALS_FILE, "w", encoding='utf-8') as f:
             f.write('\n'.join(codes))
 
 def crawl_tencent_optional():

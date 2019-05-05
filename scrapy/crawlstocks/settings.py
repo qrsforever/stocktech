@@ -119,6 +119,8 @@ FINANCIAL_INFO_FILE = os.path.join(FILE_DIR, 'financial_info.txt')
 STOCK_URLS_FILE = os.path.join(FILE_DIR, 'stock_urls.txt')
 STOCK_CWZB_FILE = os.path.join(FILE_DIR, 'stock_cwzb.txt')
 
+TICKDETAIL_LAST_DATE_FILE = os.path.join(FILE_DIR, 'tickdetail_last_date.txt')
+
 # MongoDB
 
 DB_URI = 'mongodb://localhost:27027/'

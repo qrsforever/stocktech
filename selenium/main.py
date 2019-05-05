@@ -26,9 +26,7 @@ if __name__ == "__main__":
             print('[%d] task: %s' % (i, each))
         print("\n==================================")
     elif sys.argv[1].isdecimal():
-        print(sys.argv[1])
-        # idx = int(sys.argv[1])
-        idx = int('1')
+        idx = int(sys.argv[1])
         if idx < 1 or idx > len(task):
             print('index [%s] is outside' % idx)
             exit(-1)

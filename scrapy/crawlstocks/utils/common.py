@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import datetime
 
 def zone_code(code):
     if code[0] in ['0','2','3']:
@@ -34,8 +35,27 @@ def cookie_dict(cookiefile):
         print(e)
     return cookies
 
+def get_every_days(begin, end, flag = 1, fmt='%Y%m%d'):
+    # flag = 0: all days, flag = 1: workdays, flag = 2: weakend days
+    days = []
+    if isinstance(begin, str):
+        begin = datetime.datetime.strptime(begin, fmt)
+    if isinstance(end, str):
+        end = datetime.datetime.strptime(end, fmt)
+    while begin <= end:
+        if flag == 1:
+            if begin.weekday() <= 4:
+                days.append(begin.strftime(fmt))
+        elif flag == 2:
+            if begin.weekday() >= 5: 
+                days.append(begin.strftime(fmt))
+        else:
+            days.append(begin.strftime(fmt))
+
+        begin += datetime.timedelta(days=1)
+    return days
+
 if __name__ == "__main__":
-    # t = cookie_str('/media/lidong/udisk/stocktech/files/gu_qq_cookies.txt')
-    # print(t)
-    t = cookie_dict('/media/lidong/udisk/stocktech/files/gu_qq_cookies.txt')
-    print(t)
+    # print(cookie_str('/media/lidong/udisk/stocktech/files/gu_qq_cookies.txt'))
+    # print(cookie_dict('/media/lidong/udisk/stocktech/files/gu_qq_cookies.txt'))
+    print(get_every_days('20190301', datetime.datetime.now(), 2))

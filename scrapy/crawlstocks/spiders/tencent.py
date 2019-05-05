@@ -2,22 +2,22 @@
 # -*- coding: utf-8 -*-
 
 import scrapy
+import datetime
+import re
 from io import StringIO
-from datetime import datetime
-from pymongo import MongoClient
 
 from scrapy_splash import SplashRequest
 from crawlstocks.items.tencent import TickDetailItem
-from crawlstocks.exceptions import DownloadException
-from crawlstocks.items.items import CrawlErrorItem
-from crawlstocks.utils.common import cookie_dict
+from crawlstocks.utils.common import cookie_dict, zone_code, get_every_days
 
+# TODO cookie not working, so with selenium work together.
 class CrawlTickDetailSpider(scrapy.Spider):
     name = 'tencent.tickdetail'
 
-    # allowed_domains = [ 'gu.qq.com', 'stock.gtimg.cn' ]
+    allowed_domains = [ 'gu.qq.com', 'stock.gtimg.cn' ]
 
-    debug = False
+    debug = True
+    selenium = True
 
     custom_settings = {
             'REDIRECT_ENABLED': True,
@@ -36,12 +36,19 @@ class CrawlTickDetailSpider(scrapy.Spider):
                 'scrapy_splash.SplashMiddleware': 725,
                 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
                 },
-            # 'ITEM_PIPELINES' : {
-                # 'crawlstocks.pipelines.db.tencent.TickDetailPipeline': 100,
-                # }
+            'ITEM_PIPELINES' : {
+                'crawlstocks.pipelines.db.tencent.TickDetailPipeline': 100,
+                }
             }
 
     cookies = dict()
+    codesfile = list()
+
+    url_prefix = 'http://stock.gtimg.cn/data/index.php'
+
+    # attachment; filename="sh600532_成交明细_20190429.xls"
+    re_fn = re.compile(r'attachment; filename="s[h|z](?P<code>[0369]\d{5})_.*_(?P<date>\d{8}).xls"')
+
 
     # 对请求的返回进行处理的配置
     meta = {
@@ -50,46 +57,103 @@ class CrawlTickDetailSpider(scrapy.Spider):
         # 'handle_httpstatus_list': [301, 302]  # 对哪些异常返回进行处理
     }
 
-    def __init__(self, cookiefile=None):
+    def __init__(self, cookiefile=None, codesfile=None):
         if cookiefile:
             self.cookies = cookie_dict(cookiefile)
-            # self.logger.info(self.cookies)
+        if codesfile:
+            with open(codesfile, 'r') as f:
+                self.codes = [each.strip('\n') for each in f.readlines()]
 
     def start_requests(self):
-        start_url = 'http://gu.qq.com/i'
+        if self.selenium:
+            end = datetime.datetime.now()
+            begin = end + datetime.timedelta(days=-15)
+            try:
+                with open(self.settings.get('TICKDETAIL_LAST_DATE_FILE'), 'r') as f:
+                    last = datetime.datetime.strptime(f.readline().strip('\n'), '%Y%m%d')
+                    print(last)
+                    if last and last > begin:
+                        begin = last
+            except Exception as e:
+                self.logger.warn(e)
+            days = get_every_days(begin, end, flag = 1)
+            for code in self.codes:
+                symbol = zone_code(code)
+                for day in days:
+                    url = self.url_prefix + '?appn=detail&action=download&c={}&d={}'
+                    yield scrapy.Request(url=url.format(symbol, day))
+                if self.debug: return
+            with open(self.settings.get('TICKDETAIL_LAST_DATE_FILE'), 'w') as f:
+                f.write(end.strftime('%Y%m%d'))
+            return
+
+        url = 'http://gu.qq.com/i'
         headers = {
                 "Host": "gu.qq.com",
                 "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0",
-                # 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0',
-                # "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                # "Accept-Language": "en-US,en;q=0.7,zh-CN;q=0.3",
-                # "Connection": "keep-alive",
-                # "Upgrade-Insecure-Requests": 1,
-                # "Pragma": "no-cache",
-                # "Cache-Control": "no-cache",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.7,zh-CN;q=0.3",
+                "Connection": "keep-alive",
+                "Upgrade-Insecure-Requests": 1,
+                "Pragma": "no-cache",
+                "Cache-Control": "no-cache",
                 }
-        yield SplashRequest(url=start_url,
+        yield SplashRequest(url=url,
                 method = 'GET',
-                callback=self.parse,
-                args={'wait': 8.0, 'image': 1},
+                callback=self.parse_optionals,
+                args={'wait': 8.0,'console': 1,'image': 1},
                 headers=headers, cookies=self.cookies,
                 meta=self.meta, dont_filter=True)
-        # yield scrapy.Request(url=start_url, headers=headers,
-                # cookies=self.cookies, meta=self.meta, dont_filter=True)
 
-    def parse(self, response):
-        self.logger.info('length = %d' % len(response.body.decode()))
+    def parse_optionals(self, response):
+        # TODO cookie is not working
+        self.logger.info('length = %d' % len(response.body.decode('utf8')))
         try:
             with open('/home/lidong/Downloads/cookie.html', 'w', encoding='utf-8') as f:
                 s = response.body.decode()
                 f.write(str(s))
         except Exception as e:
-            print(e)
-        # self.logger.info(response.body)
-            # browser.find_element_by_xpath('//div[@class="zxg-stocklist"]'), 2)
-        # self.logger.info(response.xpath('//div[@class="zxg-stocklist"]'))
-        # for x in response.xpath('//div[@class="zxg-stocklist"]'):
-            # self.logger.info(x)
-        # response.xpath('//*[@id="sh600703"]')
+            self.logger.error(e)
+
+        # parse codes
+
+    def parse(self, response):
+        self.logger.info('url: %s ' % response.url)
+        item = TickDetailItem()
+        try:
+            res = self.re_fn.search(response.headers['Content-Disposition'].decode('gbk'))
+            if res is None:
+                return
+            lines = StringIO(response.body.decode("gbk"))
+            # the first line is header
+            if len(lines.readline().split()) != 6:
+                return
+            code = res.groupdict()['code']
+            date = res.groupdict()['date']
+            while True:
+                line = lines.readline()
+                if line == '':
+                    break;
+                data = line.split()
+                item['code'] = code
+                item['datetime'] = datetime.datetime.strptime(date+data[0], '%Y%m%d%H:%M:%S')
+                item['price'] = data[1]
+                item['change'] = data[2]
+                item['volume'] = data[3]
+                item['amount'] = data[4]
+                if data[5] == '买盘':
+                    item['bstype'] = 'b'
+                elif data[5] == '卖盘':
+                    item['bstype'] = 's'
+                else:
+                    item['bstype'] = '-'
+                item['_id'] = item['code'] + '_' + date + data[0].replace(':', '')
+                yield item
+                if self.debug: break
+        except Exception as e:
+            self.logger.error(e)
+
+    def closed(self, reason):
+        self.logger.info(reason)
 
 #####################################################################################

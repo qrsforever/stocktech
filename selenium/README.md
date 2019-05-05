@@ -26,9 +26,15 @@ categories: [stock]
 
     ```
 
-
 # Usage
 
 - `./main.py list`
 
-- `./main.py crawl taskxxx`
+- `./main.py crawl task` or `./main.py 1`
+
+# Crawl
+
+## `crawl_tencent_optional` in `tencent_optional.py`
+
+自动登录hu.qq.com将自选股票代码下载到`settings.OPTIONAL_CODES_FILE`
+
