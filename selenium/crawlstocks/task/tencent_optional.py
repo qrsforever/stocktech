@@ -84,11 +84,12 @@ def crawl_tencent_optional():
     browser = Browser('firefox').get_driver()
     try:
         browser.get('http://gu.qq.com/i')
-        _do_load_cookie(browser)
-        browser.get('http://gu.qq.com/i')
         try:
+            _do_load_cookie(browser)
+            browser.get('http://gu.qq.com/i')
             _do_stock_list(browser)
         except:
+            browser.refresh()
             _do_user_login(browser)
             _do_save_cookie(browser)
             _do_stock_list(browser)

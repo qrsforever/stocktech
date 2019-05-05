@@ -20,14 +20,14 @@ BOT_NAME = 'crawlstocks'
 SPIDER_MODULES = ['crawlstocks.spiders']
 NEWSPIDER_MODULE = 'crawlstocks.spiders'
 
-RETRY_TIMES = 1
+RETRY_TIMES = 2
 # next page depth
 DEPTH_LIMIT = 60
 DOWNLOAD_TIMEOUT = 10
 REDIRECT_ENABLED = False
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'crawlstocks (+https://qrsforever.github.io)'
+# USER_AGENT = 'crawlstocks (+https://qrsforever.github.io)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -45,10 +45,8 @@ DOWNLOAD_DELAY = 2.5
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-# 防止网站封爬虫
-# COOKIES_ENABLED = False
-
-COOKIES_ENABLED = True
+# 防止网站封爬虫:False
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 TELNETCONSOLE_ENABLED = False
