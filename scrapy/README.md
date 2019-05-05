@@ -94,6 +94,12 @@ scrapy startproject crawlstocks .
 临时使用selenium解决, 参考`selenium/crawlstocks/task/tencent_optional.py`
 
 
+```shell
+cd selenium; ./main.py crawl_tencent_optional
+scrapy crawl tencent.tickdetail -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
+```
+
+
 # 数据网站
 
 ## 股城网(hq.gucheng.com)

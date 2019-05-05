@@ -30,14 +30,14 @@ def cookie_dict(cookiefile):
         with open(cookiefile, 'r', encoding='utf-8') as f:
             listcookies = json.loads(f.read())
         for item in listcookies:
-            cookies[item['name']] =  item['value']
+            cookies[item['name']] = item['value']
     except Exception as e:
         print(e)
     return cookies
 
 def get_every_days(begin, end, flag = 1, fmt='%Y%m%d'):
     # flag = 0: all days, flag = 1: workdays, flag = 2: weakend days
-    days = []
+    # days = []
     if isinstance(begin, str):
         begin = datetime.datetime.strptime(begin, fmt)
     if isinstance(end, str):
@@ -45,17 +45,22 @@ def get_every_days(begin, end, flag = 1, fmt='%Y%m%d'):
     while begin <= end:
         if flag == 1:
             if begin.weekday() <= 4:
-                days.append(begin.strftime(fmt))
+                yield begin.strftime(fmt)
+                # days.append(begin.strftime(fmt))
         elif flag == 2:
-            if begin.weekday() >= 5: 
-                days.append(begin.strftime(fmt))
+            if begin.weekday() >= 5:
+                # days.append(begin.strftime(fmt))
+                yield begin.strftime(fmt)
         else:
-            days.append(begin.strftime(fmt))
+            # days.append(begin.strftime(fmt))
+            yield begin.strftime(fmt)
 
         begin += datetime.timedelta(days=1)
-    return days
+    # return days
 
 if __name__ == "__main__":
     # print(cookie_str('/media/lidong/udisk/stocktech/files/gu_qq_cookies.txt'))
     # print(cookie_dict('/media/lidong/udisk/stocktech/files/gu_qq_cookies.txt'))
-    print(get_every_days('20190301', datetime.datetime.now(), 2))
+    days = get_every_days('20190301', datetime.datetime.now(), 2)
+    for day in days:
+        print(day)

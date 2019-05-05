@@ -29,4 +29,4 @@ def trycall(func, maxcnt = 6):
             return func()
         except:
             time.sleep(1)
-            maxcnt -= 1 
+            maxcnt -= 1

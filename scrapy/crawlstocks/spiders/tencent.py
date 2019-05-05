@@ -16,7 +16,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
 
     allowed_domains = [ 'gu.qq.com', 'stock.gtimg.cn' ]
 
-    debug = True
+    debug = False
     selenium = True
 
     custom_settings = {
@@ -31,7 +31,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
                 },
             'DOWNLOADER_MIDDLEWARES': {
                 'crawlstocks.middlewares.download.CatchExceptionMiddleware': 600,
-                'crawlstocks.middlewares.download.DebugMiddleware': 820,
+                # 'crawlstocks.middlewares.download.DebugMiddleware': 820,
                 'scrapy_splash.SplashCookiesMiddleware': 723,
                 'scrapy_splash.SplashMiddleware': 725,
                 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
@@ -42,6 +42,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
             }
 
     cookies = dict()
+    codes = list()
     codesfile = list()
 
     url_prefix = 'http://stock.gtimg.cn/data/index.php'
@@ -66,25 +67,33 @@ class CrawlTickDetailSpider(scrapy.Spider):
 
     def start_requests(self):
         if self.selenium:
-            end = datetime.datetime.now()
-            begin = end + datetime.timedelta(days=-15)
+            codes_last_date = dict()
             try:
                 with open(self.settings.get('TICKDETAIL_LAST_DATE_FILE'), 'r') as f:
-                    last = datetime.datetime.strptime(f.readline().strip('\n'), '%Y%m%d')
-                    print(last)
-                    if last and last > begin:
-                        begin = last
+                    for line in f.readlines():
+                        item = line.strip('\n').split(',')
+                        codes_last_date[item[0]] = item[1]
             except Exception as e:
                 self.logger.warn(e)
-            days = get_every_days(begin, end, flag = 1)
+
+            end = datetime.datetime.now()
+            begin = end + datetime.timedelta(days=-180)
             for code in self.codes:
-                symbol = zone_code(code)
-                for day in days:
+                beg = begin
+                try:
+                    last = datetime.datetime.strptime(codes_last_date[code], '%Y%m%d')
+                    if last and last > begin:
+                        beg = last
+                except:
+                    pass
+                for day in get_every_days(beg, end, flag = 1):
                     url = self.url_prefix + '?appn=detail&action=download&c={}&d={}'
-                    yield scrapy.Request(url=url.format(symbol, day))
-                if self.debug: return
+                    yield scrapy.Request(url=url.format(zone_code(code), day))
+                codes_last_date[code] = end.strftime('%Y%m%d')
+                if self.debug: break
             with open(self.settings.get('TICKDETAIL_LAST_DATE_FILE'), 'w') as f:
-                f.write(end.strftime('%Y%m%d'))
+                for key, value in codes_last_date.items():
+                    f.write('{},{}\n'.format(key, value))
             return
 
         url = 'http://gu.qq.com/i'
