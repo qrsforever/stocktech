@@ -8,7 +8,7 @@ from pymongo import MongoClient
 
 from crawlstocks.items.netease163 import CHDDataItem
 from crawlstocks.exceptions import DownloadException
-from crawlstocks.items.items import CrawlErrorItem
+from crawlstocks.items import CrawlErrorItem
 
 class CrawlChdDataSpider(scrapy.Spider):
     name = 'netease163.chddata'

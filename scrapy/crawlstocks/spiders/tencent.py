@@ -44,6 +44,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
     cookies = dict()
     codes = list()
     codesfile = list()
+    codes_last_date = dict()
 
     url_prefix = 'http://stock.gtimg.cn/data/index.php'
 
@@ -67,12 +68,11 @@ class CrawlTickDetailSpider(scrapy.Spider):
 
     def start_requests(self):
         if self.selenium:
-            codes_last_date = dict()
             try:
                 with open(self.settings.get('TICKDETAIL_LAST_DATE_FILE'), 'r') as f:
                     for line in f.readlines():
                         item = line.strip('\n').split(',')
-                        codes_last_date[item[0]] = item[1]
+                        self.codes_last_date[item[0]] = item[1]
             except Exception as e:
                 self.logger.warn(e)
 
@@ -81,7 +81,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
             for code in self.codes:
                 beg = begin
                 try:
-                    last = datetime.datetime.strptime(codes_last_date[code], '%Y%m%d')
+                    last = datetime.datetime.strptime(self.codes_last_date[code], '%Y%m%d')
                     if last and last > begin:
                         beg = last
                 except:
@@ -89,11 +89,8 @@ class CrawlTickDetailSpider(scrapy.Spider):
                 for day in get_every_days(beg, end, flag = 1):
                     url = self.url_prefix + '?appn=detail&action=download&c={}&d={}'
                     yield scrapy.Request(url=url.format(zone_code(code), day))
-                codes_last_date[code] = end.strftime('%Y%m%d')
+                self.codes_last_date[code] = end.strftime('%Y%m%d')
                 if self.debug: break
-            with open(self.settings.get('TICKDETAIL_LAST_DATE_FILE'), 'w') as f:
-                for key, value in codes_last_date.items():
-                    f.write('{},{}\n'.format(key, value))
             return
 
         url = 'http://gu.qq.com/i'
@@ -151,11 +148,11 @@ class CrawlTickDetailSpider(scrapy.Spider):
                 item['volume'] = data[3]
                 item['amount'] = data[4]
                 if data[5] == '买盘':
-                    item['bstype'] = 'b'
+                    item['bstype'] = 'B'
                 elif data[5] == '卖盘':
-                    item['bstype'] = 's'
+                    item['bstype'] = 'S'
                 else:
-                    item['bstype'] = '-'
+                    item['bstype'] = 'M'
                 item['_id'] = item['code'] + '_' + date + data[0].replace(':', '')
                 yield item
                 if self.debug: break
@@ -164,5 +161,8 @@ class CrawlTickDetailSpider(scrapy.Spider):
 
     def closed(self, reason):
         self.logger.info(reason)
+        with open(self.settings.get('TICKDETAIL_LAST_DATE_FILE'), 'w') as f:
+            for key, value in self.codes_last_date.items():
+                f.write('{},{}\n'.format(key, value))
 
 #####################################################################################

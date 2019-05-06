@@ -58,6 +58,18 @@ def get_every_days(begin, end, flag = 1, fmt='%Y%m%d'):
         begin += datetime.timedelta(days=1)
     # return days
 
+def is_stock_opening():
+    now = datetime.datetime.now()
+    if now.weekday() >= 5:
+        return False
+    if now.hour < 9 or now.hour > 15 or now.hour == 12:
+        return False
+    if now.hour == 9 and now.minute < 29:
+        return False
+    if now.hour == 11 and now.minute > 30:
+        return False
+    return True
+
 if __name__ == "__main__":
     # print(cookie_str('/media/lidong/udisk/stocktech/files/gu_qq_cookies.txt'))
     # print(cookie_dict('/media/lidong/udisk/stocktech/files/gu_qq_cookies.txt'))
