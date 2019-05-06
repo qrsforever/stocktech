@@ -19,7 +19,7 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
     custom_settings = {
             'ITEM_PIPELINES' : {
                 'crawlstocks.pipelines.db.sina.LatestQuotaPipeline':100,
-                'crawlstocks.pipelines.net.sina.LatestQuotaPipeline':100
+                'crawlstocks.pipelines.net.sina.LatestQuotaPipeline':200
                 }
             }
 
@@ -34,10 +34,11 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
     def start_requests(self):
         url0 = 'http://hq.sinajs.cn/list='
         while True:
-            time.sleep(3)
-            if not is_stock_opening():
-                time.sleep(10)
-                continue
+            if not self.debug:
+                time.sleep(3)
+                if not is_stock_opening():
+                    time.sleep(10)
+                    continue
             p = 10
             symbols = []
             for i, each in enumerate(self.codes, 1):

@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import scrapy
-import datetime
+import datetime, time
 import re
 from io import StringIO
 
 from scrapy_splash import SplashRequest
 from crawlstocks.items.tencent import TickDetailItem
-from crawlstocks.utils.common import cookie_dict, zone_code, get_every_days
+from crawlstocks.items.tencent import RealtimeQuotaItem
+from crawlstocks.utils.common import cookie_dict, zone_code
+from crawlstocks.utils.common import get_every_days, is_stock_opening
 
 # TODO cookie not working, so with selenium work together.
 class CrawlTickDetailSpider(scrapy.Spider):
@@ -166,3 +168,106 @@ class CrawlTickDetailSpider(scrapy.Spider):
                 f.write('{},{}\n'.format(key, value))
 
 #####################################################################################
+
+
+class CrawlRealtimeQuotaSpider(scrapy.Spider):
+    name = 'tencent.realtimequota'
+
+    allowed_domains = [ 'qt.gtimg.cn' ]
+
+    debug = False
+
+    custom_settings = {
+            'ITEM_PIPELINES' : {
+                'crawlstocks.pipelines.db.tencent.RealtimeQuotaPipeline':100,
+                'crawlstocks.pipelines.net.tencent.RealtimeQuotaPipeline':200
+                }
+            }
+
+    re_data = re.compile(r'v_s[h|z][0369]\d{5}="(?P<data>[^"]*)".*')
+    codes = list()
+
+    def __init__(self, codesfile=None):
+        if codesfile:
+            with open(codesfile, 'r') as f:
+                self.codes = [each.strip('\n') for each in f.readlines()]
+
+    def start_requests(self):
+        url0 = 'http://qt.gtimg.cn/q='
+        while True:
+            if not self.debug:
+                time.sleep(3)
+                if not is_stock_opening():
+                    time.sleep(10)
+                    continue
+            for each in self.codes:
+                yield scrapy.Request(url=url0+zone_code(each), dont_filter=True)
+            if self.debug: return
+
+    def parse(self, response):
+        self.logger.info(response.url)
+        result = response.body.decode('gbk')
+        res = self.re_data.search(result)
+        if res is None:
+            return
+        data = res.groupdict()['data']
+        values = data.split('~')
+        print(len(values))
+        if len(values) < 49:
+            return
+        print(values)
+        item = RealtimeQuotaItem()
+
+        item['name'] = values[1]
+        item['code'] = values[2]
+        item['price'] = float(values[3])
+        item['settlement'] = float(values[4])
+        item['open'] = float(values[5])
+        item['volume'] = int(int(values[6])/100)
+        item['bid'] = float(values[7])
+        item['ask'] = float(values[8])
+        item['b1_p'] = float(values[9])
+        item['b1_v'] = int(int(values[10])/100)
+        item['b2_p'] = float(values[11])
+        item['b2_v'] = int(int(values[12])/100)
+        item['b3_p'] = float(values[13])
+        item['b3_v'] = int(int(values[14])/100)
+        item['b4_p'] = float(values[15])
+        item['b4_v'] = int(int(values[16])/100)
+        item['b5_p'] = float(values[17])
+        item['b5_v'] = int(int(values[18])/100)
+        item['a1_p'] = float(values[19])
+        item['a1_v'] = int(int(values[20])/100)
+        item['a2_p'] = float(values[21])
+        item['a2_v'] = int(int(values[22])/100)
+        item['a3_p'] = float(values[23])
+        item['a3_v'] = int(int(values[24])/100)
+        item['a4_p'] = float(values[25])
+        item['a4_v'] = int(int(values[26])/100)
+        item['a5_p'] = float(values[27])
+        item['a5_v'] = int(int(values[28])/100)
+        item['recent_trades'] = values[29]
+        item['datetime'] = datetime.datetime.strptime(values[30], '%Y%m%d%H%M%S')
+        item['chg'] = float(values[31])
+        item['pchg'] = float(values[32])
+        item['high'] = float(values[33])
+        item['low'] = float(values[34])
+        item['price_volume_amount'] = values[35]
+        item['volume'] = int(int(values[36])/100)
+        item['amount'] = float(values[37])
+        item['turnover'] = float(values[38])
+        item['PE'] = float(values[39])
+        item['unknown'] = values[40]
+        item['high2'] = float(values[41])
+        item['low2'] = float(values[42])
+        item['amplitude'] = float(values[43])
+        item['mcap'] = float(values[44])
+        item['tcap'] = float(values[45])
+        item['PB'] = float(values[46])
+        item['topest'] = float(values[47])
+        item['lowest'] = float(values[48])
+        yield item
+        if self.debug: return
+
+    def closed(self, reason):
+        self.logger.info(reason)

@@ -90,13 +90,31 @@ scrapy startproject crawlstocks .
 
 ## tencent.tickdetail
 
-自动登录hu.qq.com将自选code下载到指定文件中, 目前改爬虫由于cookie总有问题, 暂时不通,
-临时使用selenium解决, 参考`selenium/crawlstocks/task/tencent_optional.py`
+自动登录hu.qq.com将自选code下载到指定文件`gu_qq_optionals.txt`中, 目前改爬虫由于cookie
+总有问题, 暂时不通, 临时使用selenium解决, 参考`selenium/crawlstocks/task/tencent_optional.py`
 
 
 ```shell
 cd selenium; ./main.py crawl_tencent_optional
 scrapy crawl tencent.tickdetail -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
+```
+
+## tencent.realtimequta
+
+实时获取最新交易行情
+
+```shell
+cd selenium; ./main.py crawl_tencent_optional
+scrapy crawl tencent.realtimequota -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
+```
+
+## sina.latestquota
+
+通过新浪接口实时获取最新行情
+
+```shell
+cd selenium; ./main.py crawl_tencent_optional
+scrapy crawl sina.latestquota -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
 ```
 
 
