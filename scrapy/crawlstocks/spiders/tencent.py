@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file tencent.py
+# @brief 
+# @author QRS
+# @home qrsforever.github.io
+# @version 1.0
+# @date 2019-05-07 15:31:37
+
 import scrapy
 import datetime, time
 import re
@@ -9,6 +16,7 @@ from io import StringIO
 from scrapy_splash import SplashRequest
 from crawlstocks.items.tencent import TickDetailItem
 from crawlstocks.items.tencent import RealtimeQuotaItem
+from crawlstocks.items.tencent import CashFlowItem
 from crawlstocks.utils.common import cookie_dict, zone_code
 from crawlstocks.utils.common import get_every_days, is_stock_opening
 
@@ -167,6 +175,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
             for key, value in self.codes_last_date.items():
                 f.write('{},{}\n'.format(key, value))
 
+
 #####################################################################################
 
 
@@ -212,7 +221,6 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
             return
         data = res.groupdict()['data']
         values = data.split('~')
-        print(len(values))
         if len(values) < 49:
             return
         item = RealtimeQuotaItem()
@@ -222,8 +230,8 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
         item['settlement'] = float(values[4])
         item['open'] = float(values[5])
         item['volume'] = int(int(values[6])/100)
-        item['bid'] = float(values[7])
-        item['ask'] = float(values[8])
+        item['b_v'] = float(values[7])
+        item['a_v'] = float(values[8])
         item['b1_p'] = float(values[9])
         item['b1_v'] = int(int(values[10])/100)
         item['b2_p'] = float(values[11])
@@ -270,3 +278,81 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
 
     def closed(self, reason):
         self.logger.info(reason)
+
+
+#####################################################################################
+
+
+class CrawlCashFlowSpider(scrapy.Spider):
+    name = 'tencent.cashflow'
+
+    allowed_domains = [ 'qt.gtimg.cn' ]
+
+    debug = True
+
+    custom_settings = {
+            'ITEM_PIPELINES' : {
+                # 'crawlstocks.pipelines.db.tencent.CashFlowPipeline':100,
+                # 'crawlstocks.pipelines.net.tencent.CashFlowPipeline':200
+                }
+            }
+
+    re_data = re.compile(r'v_ff_s[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
+    codes = list()
+
+    def __init__(self, codesfile=None):
+        if codesfile:
+            with open(codesfile, 'r') as f:
+                self.codes = [each.strip('\n') for each in f.readlines()]
+
+    def start_requests(self):
+        url0 = 'http://qt.gtimg.cn/q=ff_'
+        while True:
+            if not self.debug:
+                time.sleep(3)
+                if not is_stock_opening():
+                    time.sleep(10)
+                    continue
+            for each in self.codes:
+                yield scrapy.Request(url=url0+zone_code(each), dont_filter=True)
+            if self.debug: return
+
+    def parse(self, response):
+        self.logger.info(response.url)
+        result = response.body.decode('gbk')
+        res = self.re_data.search(result)
+        if res is None:
+            return
+        data = res.groupdict()['data']
+        code = res.groupdict()['code']
+        values = data.split('~')
+        if len(values) < 21:
+            return
+        item = CashFlowItem()
+        item['code']          = code
+        item['main_in']       = float(values[1])
+        item['main_out']      = float(values[2])
+        item['main_net']      = float(values[3])
+        item['main_net_rate'] = float(values[4])
+        item['priv_in']       = float(values[5])
+        item['priv_out']      = float(values[6])
+        item['priv_net']      = float(values[7])
+        item['priv_net_rate'] = float(values[8])
+        item['total_cash']  = float(values[9])
+        item['unkown1']       = values[10]
+        item['unkown2']       = values[11]
+        item['name']          = values[12]
+        item['date']          = values[13]
+        item['before_day1']   = values[14]
+        item['before_day2']   = values[15]
+        item['before_day3']   = values[16]
+        item['before_day4']   = values[17]
+        item['unkown3']       = values[18]
+        item['unkown4']       = values[19]
+        item['datetime']      = datetime.datetime.strptime(values[20], '%Y%m%d%H%M%S')
+        yield item
+        if self.debug: return
+
+    def closed(self, reason):
+        self.logger.info(reason)
+        

@@ -150,6 +150,19 @@ response.xpath('//section[has-class("stockTable")]/a/text()').get() ```
 3. [Selector](https://docs.scrapy.org/en/latest/topics/selectors.html)
 4. [随机代理](https://www.cnblogs.com/trunkslisa/p/9841658.html)
 
+# 技巧
+
+## mongodb修改列
+
+```sql
+
+db.collection.update(criteria,objNew,upsert,multi)
+db.latestquota.update({}, {$rename : {"bid" : "b_p"}}, false, true)
+db.latestquota.update({}, {$rename : {"ask" : "a_p"}}, false, true)
+
+```
+
+
 # 问题
 
 ## 动态页面

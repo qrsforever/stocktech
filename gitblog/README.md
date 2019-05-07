@@ -1,3 +1,8 @@
+
+[股科stocktech主页](https://zytforever.github.io)
+
+[个人主页](https://qrsforever.github.io)
+
 ## installer
 
 - `sudo apt-get install pandoc texlive`

@@ -62,7 +62,7 @@ def is_stock_opening():
     now = datetime.datetime.now()
     if now.weekday() >= 5:
         return False
-    if now.hour < 9 or now.hour > 15 or now.hour == 12:
+    if now.hour < 9 or now.hour >= 15 or now.hour == 12:
         return False
     if now.hour == 9 and now.minute < 29:
         return False
