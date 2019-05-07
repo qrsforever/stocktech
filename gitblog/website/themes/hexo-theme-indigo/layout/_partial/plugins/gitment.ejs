@@ -1,0 +1,24 @@
+<% if (theme.gitment){ %>
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+    <script src="https://www.wenjunjiang.win/js/gitment.js"></script>
+    <script>
+        var str='{{ page.date | date: "%Y-%m-%d" }} {{ page.title }}';
+        var id = str;
+        if (str.length>=45) {
+            id=str.substring(0,45)+"...";
+        }
+        var gitment = new Gitment({
+            id: id,
+            owner: '<%- theme.gitment.owner %>',
+            repo: '<%- theme.gitment.repo %>',
+            oauth: {
+                client_id: '<%- theme.gitment.client_id %>',
+                client_secret: '<%- theme.gitment.client_secret %>',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+<% } %>

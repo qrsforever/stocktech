@@ -37,7 +37,7 @@ class LatestQuotaPipeline(object):
                 self.col = self.db[self.mongo_collection]
             else:
                 self.col = self.db.create_collection(self.mongo_collection,
-                        capped=True, max=200000000)
+                        capped=True, size=600000000, max=200000000)
         except Exception as e:
             spider.logger.info("open error:", repr(e))
 

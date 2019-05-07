@@ -18,7 +18,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
 
     allowed_domains = [ 'gu.qq.com', 'stock.gtimg.cn' ]
 
-    debug = False
+    debug = True
     selenium = True
 
     custom_settings = {
@@ -215,9 +215,7 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
         print(len(values))
         if len(values) < 49:
             return
-        print(values)
         item = RealtimeQuotaItem()
-
         item['name'] = values[1]
         item['code'] = values[2]
         item['price'] = float(values[3])
@@ -266,6 +264,7 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
         item['PB'] = float(values[46])
         item['topest'] = float(values[47])
         item['lowest'] = float(values[48])
+        item['_id'] = item['code'] + '_' + values[30]
         yield item
         if self.debug: return
 
