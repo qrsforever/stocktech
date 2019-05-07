@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # @file tencent.py
-# @brief 
+# @brief
 # @author QRS
 # @home qrsforever.github.io
 # @version 1.0
@@ -52,8 +52,6 @@ class CrawlTickDetailSpider(scrapy.Spider):
             }
 
     cookies = dict()
-    codes = list()
-    codesfile = list()
     codes_last_date = dict()
 
     url_prefix = 'http://stock.gtimg.cn/data/index.php'
@@ -72,12 +70,17 @@ class CrawlTickDetailSpider(scrapy.Spider):
     def __init__(self, cookiefile=None, codesfile=None):
         if cookiefile:
             self.cookies = cookie_dict(cookiefile)
-        if codesfile:
-            with open(codesfile, 'r') as f:
-                self.codes = [each.strip('\n') for each in f.readlines()]
+        self.codesfile = codesfile
 
     def start_requests(self):
         if self.selenium:
+            codes = list()
+            if self.codesfile:
+                with open(self.codesfile, 'r') as f:
+                    codes = [each.strip('\n') for each in f.readlines()]
+            else:
+                with open(self.settings.get('STOCK_OPTIONALS_FILE'), 'r') as f:
+                    codes = [each.strip('\n') for each in f.readlines()]
             try:
                 with open(self.settings.get('TICKDETAIL_LAST_DATE_FILE'), 'r') as f:
                     for line in f.readlines():
@@ -88,7 +91,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
 
             end = datetime.datetime.now()
             begin = end + datetime.timedelta(days=-180)
-            for code in self.codes:
+            for code in codes:
                 beg = begin
                 try:
                     last = datetime.datetime.strptime(self.codes_last_date[code], '%Y%m%d')
@@ -194,22 +197,26 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
             }
 
     re_data = re.compile(r'v_s[h|z][0369]\d{5}="(?P<data>[^"]*)".*')
-    codes = list()
 
     def __init__(self, codesfile=None):
-        if codesfile:
-            with open(codesfile, 'r') as f:
-                self.codes = [each.strip('\n') for each in f.readlines()]
+        self.codesfile = codesfile
 
     def start_requests(self):
         url0 = 'http://qt.gtimg.cn/q='
+        codes = list()
+        if self.codesfile:
+            with open(self.codesfile, 'r') as f:
+                codes = [each.strip('\n') for each in f.readlines()]
+        else:
+            with open(self.settings.get('STOCK_OPTIONALS_FILE'), 'r') as f:
+                codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
                 time.sleep(3)
                 if not is_stock_opening():
                     time.sleep(10)
                     continue
-            for each in self.codes:
+            for each in codes:
                 yield scrapy.Request(url=url0+zone_code(each), dont_filter=True)
             if self.debug: return
 
@@ -292,28 +299,32 @@ class CrawlCashFlowSpider(scrapy.Spider):
 
     custom_settings = {
             'ITEM_PIPELINES' : {
-                # 'crawlstocks.pipelines.db.tencent.CashFlowPipeline':100,
-                # 'crawlstocks.pipelines.net.tencent.CashFlowPipeline':200
+                'crawlstocks.pipelines.db.tencent.CashFlowPipeline':100,
+                'crawlstocks.pipelines.net.tencent.CashFlowPipeline':200
                 }
             }
 
     re_data = re.compile(r'v_ff_s[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
-    codes = list()
 
     def __init__(self, codesfile=None):
-        if codesfile:
-            with open(codesfile, 'r') as f:
-                self.codes = [each.strip('\n') for each in f.readlines()]
+        self.codesfile = codesfile
 
     def start_requests(self):
         url0 = 'http://qt.gtimg.cn/q=ff_'
+        codes = list()
+        if self.codesfile:
+            with open(self.codesfile, 'r') as f:
+                codes = [each.strip('\n') for each in f.readlines()]
+        else:
+            with open(self.settings.get('STOCK_OPTIONALS_FILE'), 'r') as f:
+                codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
                 time.sleep(3)
                 if not is_stock_opening():
                     time.sleep(10)
                     continue
-            for each in self.codes:
+            for each in codes:
                 yield scrapy.Request(url=url0+zone_code(each), dont_filter=True)
             if self.debug: return
 
@@ -338,7 +349,7 @@ class CrawlCashFlowSpider(scrapy.Spider):
         item['priv_out']      = float(values[6])
         item['priv_net']      = float(values[7])
         item['priv_net_rate'] = float(values[8])
-        item['total_cash']  = float(values[9])
+        item['total_cash']    = float(values[9])
         item['unkown1']       = values[10]
         item['unkown2']       = values[11]
         item['name']          = values[12]
@@ -350,9 +361,10 @@ class CrawlCashFlowSpider(scrapy.Spider):
         item['unkown3']       = values[18]
         item['unkown4']       = values[19]
         item['datetime']      = datetime.datetime.strptime(values[20], '%Y%m%d%H%M%S')
+        item['_id']           = code + '_' + values[20]
         yield item
         if self.debug: return
 
     def closed(self, reason):
         self.logger.info(reason)
-        
+

@@ -114,6 +114,7 @@ LOG_STDOUT = True
 
 ####### 自定义
 
+STOCK_OPTIONALS_FILE = os.path.join(FILE_DIR, 'gu_qq_optionals.txt')
 STOCK_CODES_FILE = os.path.join(FILE_DIR, 'stock_codes.txt')
 FINANCIAL_INFO_FILE = os.path.join(FILE_DIR, 'financial_info.txt')
 
@@ -132,6 +133,7 @@ DB_ERRORS_COLLECTION_NAME = 'errors'
 DB_TICKDETAIL_COLLECTION_NAME = 'tickdetail'
 DB_LATESTQUOTA_COLLECTION_NAME = 'latestquota'
 DB_REALTIMEQUOTA_COLLECTION_NAME = 'realtimequota'
+DB_CASHFLOW_COLLECTION_NAME = 'cashflow'
 
 # Request
 

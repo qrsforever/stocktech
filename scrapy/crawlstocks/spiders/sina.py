@@ -24,15 +24,19 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
             }
 
     re_data = re.compile(r'var hq_str_s[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
-    codes = list()
 
     def __init__(self, codesfile=None):
-        if codesfile:
-            with open(codesfile, 'r') as f:
-                self.codes = [each.strip('\n') for each in f.readlines()]
+        self.codesfile = codesfile
 
     def start_requests(self):
         url0 = 'http://hq.sinajs.cn/list='
+        codes = list()
+        if self.codesfile:
+            with open(self.codesfile, 'r') as f:
+                codes = [each.strip('\n') for each in f.readlines()]
+        else:
+            with open(self.settings.get('STOCK_OPTIONALS_FILE'), 'r') as f:
+                codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
                 time.sleep(3)
@@ -41,7 +45,7 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
                     continue
             p = 10
             symbols = []
-            for i, each in enumerate(self.codes, 1):
+            for i, each in enumerate(codes, 1):
                 symbols.append(zone_code(each))
                 if i % p == 0:
                     yield scrapy.Request(url=url0+','.join(symbols), dont_filter=True)
