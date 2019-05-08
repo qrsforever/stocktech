@@ -12,14 +12,15 @@ from crawlstocks.utils.common import zone_code, is_stock_opening
 
 class CrawlLatestQuotationSpider(scrapy.Spider):
     name = 'sina.latestquota'
-    debug = False
+    debug = True
 
     allowed_domains = ['hq.sinajs.cn']
 
     custom_settings = {
             'ITEM_PIPELINES' : {
-                'crawlstocks.pipelines.db.sina.LatestQuotaPipeline':100,
-                'crawlstocks.pipelines.net.sina.LatestQuotaPipeline':200
+                'crawlstocks.pipelines.db.sina.LatestQuotaPipeline':200,
+                'crawlstocks.pipelines.net.sina.LatestQuotaPipeline':300,
+                'crawlstocks.pipelines.file.sina.LatestQuotaPipeline':500,
                 }
             }
 
@@ -39,6 +40,8 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
                 codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
+                if datetime.datetime.now().hour >= 15:
+                    return
                 time.sleep(3)
                 if not is_stock_opening():
                     time.sleep(10)

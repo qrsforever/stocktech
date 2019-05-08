@@ -212,6 +212,8 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
                 codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
+                if datetime.datetime.now().hour >= 15:
+                    return
                 time.sleep(3)
                 if not is_stock_opening():
                     time.sleep(10)
@@ -295,7 +297,7 @@ class CrawlCashFlowSpider(scrapy.Spider):
 
     allowed_domains = [ 'qt.gtimg.cn' ]
 
-    debug = True
+    debug = False
 
     custom_settings = {
             'ITEM_PIPELINES' : {
@@ -320,6 +322,8 @@ class CrawlCashFlowSpider(scrapy.Spider):
                 codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
+                if datetime.datetime.now().hour >= 15:
+                    return
                 time.sleep(3)
                 if not is_stock_opening():
                     time.sleep(10)

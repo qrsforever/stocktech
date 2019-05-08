@@ -12,7 +12,8 @@
 class RealtimeQuotaPipeline(object):
 
     def process_item(self, item, spider):
-        pass
+        spider.logger.info(item)
+        return item
 
 
 #####################################################################################
@@ -20,4 +21,5 @@ class RealtimeQuotaPipeline(object):
 class CashFlowPipeline(object):
 
     def process_item(self, item, spider):
-        pass
+        spider.logger.info(item)
+        return item

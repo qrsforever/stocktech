@@ -19,7 +19,7 @@ class TickDetailItem(scrapy.Item):
     change   = scrapy.Field() # 涨跌额
     volume   = scrapy.Field() # 成交量(手)
     amount   = scrapy.Field() # 成交额(元)
-    bstype   = scrapy.Field() # B 买入, S 卖出, M 中性盘
+    bstype   = scrapy.Field() # B买入, S卖出, M中性盘
 
 #####################################################################################
 

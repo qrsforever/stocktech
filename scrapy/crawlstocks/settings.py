@@ -14,6 +14,7 @@ import os
 # FILE_DIR = os.path.join(
         # os.path.dirname(os.path.realpath(__file__)), '../../', 'output')
 FILE_DIR = '/media/lidong/udisk/stocktech/files'
+TMP_DIR = '/media/lidong/udisk/stocktech/tmp'
 
 BOT_NAME = 'crawlstocks'
 
