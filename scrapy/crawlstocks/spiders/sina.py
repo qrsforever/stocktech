@@ -81,7 +81,7 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
             item['low'] = float(values[5])
             item['b_p'] = float(values[6])
             item['a_p'] = float(values[7])
-            item['volumn'] = int(int(values[8])/100)
+            item['volume'] = int(int(values[8])/100)
             item['amount'] = int(float(values[9])/10000)
             item['b1_v'] = int(int(values[10])/100)
             item['b1_p'] = float(values[11])

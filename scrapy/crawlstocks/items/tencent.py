@@ -10,6 +10,9 @@
 
 import scrapy
 
+class StockCodeItem(scrapy.Item):
+    code = scrapy.Field()
+
 # 实时成交量明细
 class TickDetailItem(scrapy.Item):
     _id      = scrapy.Field() # 主键 = code_datetime

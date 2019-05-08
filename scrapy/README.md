@@ -13,7 +13,8 @@ categories: [stock]
 1. `sudo pip3 install -U fake-useragent`
 2. `sudo pip3 install -U scrapy-splash`
 3. `sudo pip3 install -U pymongo`
-4. `sudo docker run -p 8050:8050 scrapinghub/splash`: lastest stable
+4. `sudo pip3 install -U demjson`
+5. `sudo docker run -p 8050:8050 scrapinghub/splash`: lastest stable
    `sudo docker run -p 8050:8050 scrapinghub/splash:master`: lastest development
    `sudo docker run -p 8050:8050 scrapinghub/splash:3.0`: special version
 	或者
@@ -97,6 +98,17 @@ scrapy startproject crawlstocks .
 ```shell
 cd selenium; ./main.py crawl_tencent_optional
 scrapy crawl tencent.tickdetail -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
+```
+
+## tencent.stockcode
+
+获取A股股票代码
+
+```shell
+scrapy crawl tencent.realtimequota -a cat=a
+
+cat: {a, b, ash, asz, bsh, bsz}
+     {A股, B股, A股上海, A股深圳, ...}
 ```
 
 ## tencent.realtimequta

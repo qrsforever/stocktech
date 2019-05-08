@@ -14,7 +14,7 @@ class LatestQuotaItem(scrapy.Item):
     low        = scrapy.Field() # 5 : 今日最低价
     b_p        = scrapy.Field() # 6 : 竞买价,即"买一"出价
     a_p        = scrapy.Field() # 7 : 竞卖价,即"卖一"要价
-    volumn     = scrapy.Field() # 8 : 成交量(单位:100手)
+    volume     = scrapy.Field() # 8 : 成交量(单位:100手)
     amount     = scrapy.Field() # 9 : 成交金额(万元)
     b1_v       = scrapy.Field() # 10: 委买一
     b1_p       = scrapy.Field() # 11: 委买一 出价

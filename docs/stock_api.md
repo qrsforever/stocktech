@@ -65,6 +65,24 @@ MCAP      |  流通市值
 
 ```
 
+## 列出所有股票
+
+`http://stock.gtimg.cn/data/index.php?appn=rank&t=ranka/chr&p=1&o=0&l=40&v=list_data`
+
+appn 应用: rank, price, usRank,detail, dadan, radar
+action 动作: data, download, timeline, summary
+t 类型:rank{a, b, ash, bsh, asz, bsz}/{chr, code, volume} , a股,b股
+o 排序:0|1
+p 分页
+l 一页多少
+v 变量名(任意合法字符)
+
+chr: 涨跌%
+
+```
+var list_data={t:'ranka/chr',p:1,total:91,l:40,o:1,data:'sz300362,sh603108,sh600518,sh603721,sz300550,sz002234,sh603266,sz002886,sz002470,sh600593,sz002135,sh603738,sh603128,sh603383,sz000566,sz300670,sz300566,sz300397,sz002665,sz300366,sz002249,sh600179,sz002123,sh603363,sz300658,sz002157,sh603186,sz002347,sz002458,sh603583,sh600778,sz300490,sh600448,sz300502,sz002567,sz300242,sz300113,sh601789,sh601018,sz002124'};
+```
+
 ## 分价表
 
 `http://stock.gtimg.cn/data/index.php?appn=price&c=sh600103`

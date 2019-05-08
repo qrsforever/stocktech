@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file eastmoney.py
+# @brief 
+# @author QRS
+# @home qrsforever.github.io
+# @version 1.0
+# @date 2019-05-08 23:46:58
+
 class StockUrlPipeline(object):
     def __init__(self, filepath):
         self.filepath = filepath

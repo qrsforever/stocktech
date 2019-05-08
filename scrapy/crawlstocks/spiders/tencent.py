@@ -9,16 +9,57 @@
 # @date 2019-05-07 15:31:37
 
 import scrapy
+import demjson
 import datetime, time
 import re
 from io import StringIO
 
 from scrapy_splash import SplashRequest
+from crawlstocks.items.tencent import StockCodeItem
 from crawlstocks.items.tencent import TickDetailItem
 from crawlstocks.items.tencent import RealtimeQuotaItem
 from crawlstocks.items.tencent import CashFlowItem
+
 from crawlstocks.utils.common import cookie_dict, zone_code
 from crawlstocks.utils.common import get_every_days, is_stock_opening
+
+class CrawlStockCodeSpider(scrapy.Spider):
+    name = 'tencent.stockcode'
+    allowed_domains = [ 'stock.gtimg.cn' ]
+    debug = True
+
+    custom_settings = {
+            'ITEM_PIPELINES' : {
+                'crawlstocks.pipelines.file.tencent.StockCodePipeline':100,
+                }
+            }
+    url = 'http://stock.gtimg.cn/data/index.php?appn=rank&' \
+            't=rank{}/code&p={}&o=0&l=100&v=list_data'
+
+    def __init__(self, cat='a'):
+        self.category = cat # 'a, b, ash, asz, bsh, bsz'
+
+    def start_requests(self):
+        yield scrapy.Request(self.url.format(self.category, 1), dont_filter=True)
+
+    def parse(self, response):
+        self.logger.info(response.url)
+        jdata = demjson.decode(response.body[len('var list_data='): -1])
+        if not jdata:
+            return
+        item = StockCodeItem()
+        for code in jdata['data'].split(','):
+            item['code'] = code[2:]
+            yield item
+        total = int(jdata['total'])
+        ipage = int(jdata['p'])
+        if ipage < total:
+            yield scrapy.Request(self.url.format(self.category, ipage+1),
+                    dont_filter=True)
+
+
+#####################################################################################
+
 
 # TODO cookie not working, so with selenium work together.
 class CrawlTickDetailSpider(scrapy.Spider):
