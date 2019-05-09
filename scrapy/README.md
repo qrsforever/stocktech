@@ -10,10 +10,11 @@ categories: [stock]
 
 # 准备
 
+0. `sudo apt-get install mosquitto mosquitto-clients`
 1. `sudo pip3 install -U fake-useragent`
 2. `sudo pip3 install -U scrapy-splash`
 3. `sudo pip3 install -U pymongo`
-4. `sudo pip3 install -U demjson`
+4. `sudo pip3 install -U demjson paho-mqtt`
 5. `sudo docker run -p 8050:8050 scrapinghub/splash`: lastest stable
    `sudo docker run -p 8050:8050 scrapinghub/splash:master`: lastest development
    `sudo docker run -p 8050:8050 scrapinghub/splash:3.0`: special version

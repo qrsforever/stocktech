@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<hivemq>
+
+    <listeners>
+        <tcp-listener>
+            <port>${HIVEMQ_PORT}</port>
+            <bind-address>0.0.0.0</bind-address>
+        </tcp-listener>
+    </listeners>
+
+    <mqtt>
+        <session-expiry>
+            <max-interval>86400</max-interval>
+        </session-expiry>
+        <message-expiry>
+            <max-interval>3600</max-interval>
+        </message-expiry>
+        <packets>
+            <max-packet-size>268435460</max-packet-size>
+        </packets>
+        <receive-maximum>
+            <server-receive-maximum>10</server-receive-maximum>
+        </receive-maximum>
+        <keep-alive>
+            <max-keep-alive>65535</max-keep-alive>
+        </keep-alive>
+
+        <allow-empty-client-id>
+            <enabled>true</enabled>
+        </allow-empty-client-id>
+    </mqtt>
+
+    <anonymous-usage-statistics>
+        <enabled>true</enabled>
+    </anonymous-usage-statistics>
+
+</hivemq>

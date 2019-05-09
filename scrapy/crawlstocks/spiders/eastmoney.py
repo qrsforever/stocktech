@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # @file eastmoney.py
-# @brief 
+# @brief
 # @author QRS
 # @home qrsforever.github.io
 # @version 1.0

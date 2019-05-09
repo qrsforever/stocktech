@@ -102,7 +102,7 @@ class CashFlowItem(scrapy.Item):
     unkown3       = scrapy.Field() # 18:
     unkown4       = scrapy.Field() # 19:
     datetime      = scrapy.Field() # 20: 日期时间戳
-    
+
 
 #####################################################################################
 

@@ -1,3 +1,9 @@
+# setup
+
+```sh
+export STOCKTECH_DIR=`pwd`
+```
+
 
 # 准备
 
