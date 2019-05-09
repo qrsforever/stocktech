@@ -16,17 +16,18 @@ from io import StringIO
 
 from scrapy_splash import SplashRequest
 from crawlstocks.items.tencent import StockCodeItem
+from crawlstocks.items.tencent import TapeReadingItem
 from crawlstocks.items.tencent import TickDetailItem
 from crawlstocks.items.tencent import RealtimeQuotaItem
 from crawlstocks.items.tencent import CashFlowItem
 
-from crawlstocks.utils.common import cookie_dict, zone_code
+from crawlstocks.utils.common import cookie_dict, code_to_symbol
 from crawlstocks.utils.common import get_every_days, is_stock_opening
 
 class CrawlStockCodeSpider(scrapy.Spider):
     name = 'tencent.stockcode'
     allowed_domains = [ 'stock.gtimg.cn' ]
-    debug = True
+    debug = False
 
     custom_settings = {
             'ITEM_PIPELINES' : {
@@ -142,7 +143,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
                     pass
                 for day in get_every_days(beg, end, flag = 1):
                     url = self.url_prefix + '?appn=detail&action=download&c={}&d={}'
-                    yield scrapy.Request(url=url.format(zone_code(code), day))
+                    yield scrapy.Request(url=url.format(code_to_symbol(code), day))
                 self.codes_last_date[code] = end.strftime('%Y%m%d')
                 if self.debug: break
             return
@@ -260,11 +261,11 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
                     time.sleep(10)
                     continue
             for each in codes:
-                yield scrapy.Request(url=url0+zone_code(each), dont_filter=True)
+                yield scrapy.Request(url=url0+code_to_symbol(each), dont_filter=True)
             if self.debug: return
 
     def parse(self, response):
-        self.logger.info(response.url)
+        # self.logger.info(response.url)
         result = response.body.decode('gbk')
         res = self.re_data.search(result)
         if res is None:
@@ -353,7 +354,7 @@ class CrawlCashFlowSpider(scrapy.Spider):
         self.codesfile = codesfile
 
     def start_requests(self):
-        url0 = 'http://qt.gtimg.cn/q=ff_'
+        url0 = 'http://qt.gtimg.cn/q=ff_{symbol}'
         codes = list()
         if self.codesfile:
             with open(self.codesfile, 'r') as f:
@@ -370,11 +371,12 @@ class CrawlCashFlowSpider(scrapy.Spider):
                     time.sleep(10)
                     continue
             for each in codes:
-                yield scrapy.Request(url=url0+zone_code(each), dont_filter=True)
+                yield scrapy.Request(url=url0.format(code_to_symbol(each)),
+                        dont_filter=True)
             if self.debug: return
 
     def parse(self, response):
-        self.logger.info(response.url)
+        # self.logger.info(response.url)
         result = response.body.decode('gbk')
         res = self.re_data.search(result)
         if res is None:
@@ -413,3 +415,103 @@ class CrawlCashFlowSpider(scrapy.Spider):
     def closed(self, reason):
         self.logger.info(reason)
 
+
+#####################################################################################
+
+class CrawlTapeReadingSpider(scrapy.Spider):
+    name = 'tencent.tapereading'
+
+    allowed_domains = [ 'qt.gtimg.cn' ]
+
+    debug = True
+
+    custom_settings = {
+            'DOWNLOAD_DELAY': 0.5,
+            'CONCURRENT_REQUESTS': 8,
+            'ITEM_PIPELINES': {
+                # 'crawlstocks.pipelines.db.tencent.TapeReadingPipeline':100,
+                'crawlstocks.pipelines.net.tencent.TapeReadingPipeline':200
+                }
+            }
+
+    re_handicap = re.compile(r'v_s_pks[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
+    re_brief = re.compile(r'v_s_s[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
+
+    def __init__(self, codesfile=None):
+        self.codesfile = codesfile
+
+    def start_requests(self):
+        url0 = 'http://qt.gtimg.cn/q=s_pk{}'
+        url1 = 'http://qt.gtimg.cn/q=s_{}'
+        codes = list()
+        if self.codesfile:
+            with open(self.codesfile, 'r') as f:
+                codes = [each.strip('\n') for each in f.readlines()]
+        else:
+            with open(self.settings.get('STOCK_OPTIONALS_FILE'), 'r') as f:
+                codes = [each.strip('\n') for each in f.readlines()]
+        while True:
+            if not self.debug:
+                if datetime.datetime.now().hour >= 15:
+                    return
+                time.sleep(5)
+                if not is_stock_opening():
+                    time.sleep(10)
+                    continue
+            for each in codes:
+                yield scrapy.Request(url=url0.format(code_to_symbol(each)),
+                        meta={'nexturl': url1.format(code_to_symbol(each))},
+                        dont_filter=True, callback=self.parse_handicap)
+            if self.debug: return
+
+    def parse_handicap(self, response):
+        # self.logger.info(response.url)
+        result = response.body.decode('gbk')
+        res = self.re_handicap.search(result)
+        if res is None:
+            return
+        data = res.groupdict()['data']
+        code = res.groupdict()['code']
+        values = data.split('~')
+        if len(values) < 4:
+            return
+        item = TapeReadingItem()
+        item['code'] = code
+        item['b_big_deal']   = float('%.2f' % (100 * float(values[0])))
+        item['b_small_deal'] = float('%.2f' % (100 * float(values[1])))
+        item['s_big_deal']   = float('%.2f' % (100 * float(values[2])))
+        item['s_small_deal'] = float('%.2f' % (100 * float(values[3])))
+        yield scrapy.Request(url=response.meta['nexturl'], meta={'item': item},
+                dont_filter=True, callback=self.parse_brief, priority=100)
+        if self.debug: return
+
+    def parse_brief(self, response):
+        # self.logger.info(response.url)
+        result = response.body.decode('gbk')
+        res = self.re_brief.search(result)
+        if res is None:
+            return
+        data = res.groupdict()['data']
+        code = res.groupdict()['code']
+        values = data.split('~')
+        if len(values) < 10:
+            return
+        item = response.meta['item']
+        if code != item['code']:
+            self.logger.warn('code is not same')
+            return
+        item['unkown1'] = values[0]
+        item['name']    = values[1]
+        item['code']    = values[2]
+        item['price']   = float(values[3])
+        item['chg']     = float(values[4])
+        item['pchg']    = float(values[5])
+        item['volume']  = int(int(values[6])/100)
+        item['amount']  = float(values[6])
+        item['unkown2'] = float(values[6])
+        item['tcap']    = float(values[6])
+        item['rec_datetime'] = datetime.datetime.now()
+        yield item
+
+    def closed(self, reason):
+        self.logger.info(reason)

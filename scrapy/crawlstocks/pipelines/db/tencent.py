@@ -49,9 +49,7 @@ class TickDetailPipeline(object):
         except:
             spider.logger.info("close error")
 
-
 #####################################################################################
-
 
 class RealtimeQuotaPipeline(object):
     def __init__(self, uri, db, col):
@@ -97,11 +95,9 @@ class RealtimeQuotaPipeline(object):
         except:
             spider.logger.info("close error")
 
-
 #####################################################################################
 
-
-class CashFlowPipeline(object):
+class TapeReadingPipeline(object):
     def __init__(self, uri, db, col):
         self.mongo_uri = uri
         self.mongo_db = db
@@ -111,13 +107,12 @@ class CashFlowPipeline(object):
     def from_crawler(cls, crawler):
         return cls(crawler.settings.get('DB_URI', 'mongodb://localhost:27027/'),
                 crawler.settings.get('DB_NAME', 'stocktech'),
-                crawler.settings.get('DB_CASHFLOW_COLLECTION_NAME', 'cashflow'))
+                crawler.settings.get('DB_TAPEREADING_COLLECTION_NAME', 'tapereading'))
 
     def process_item(self, item, spider):
         try:
             if self.col:
-                self.col.update_one({'_id': item['_id']},
-                        {'$set': dict(item)}, upsert = True)
+                self.col.insert_one(dict(item))
         except Exception as e:
              spider.logger.info("write error: ", repr(e))
         return item
@@ -134,7 +129,7 @@ class CashFlowPipeline(object):
             if found:
                 self.col = self.db[self.mongo_collection]
             else:
-                self.col = self.db.create_collection(self.mongo_collection, max=6000000)
+                self.col = self.db.create_collection(self.mongo_collection, max=600000)
         except Exception as e:
             spider.logger.info("open error:", repr(e))
 
@@ -144,3 +139,4 @@ class CashFlowPipeline(object):
         except:
             spider.logger.info("close error")
 
+#####################################################################################

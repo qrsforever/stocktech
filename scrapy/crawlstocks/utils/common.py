@@ -1,10 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file common.py
+# @brief 
+# @author QRS
+# @home qrsforever.github.io
+# @version 1.0
+# @date 2019-05-09 14:47:28
+
 import json
 import datetime
 
-def zone_code(code):
+def code_to_symbol(code):
     if code[0] in ['0','2','3']:
         code='sz'+code
     elif code[0] in ['6','9']:

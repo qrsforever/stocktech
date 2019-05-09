@@ -1,6 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file gucheng.py
+# @brief 
+# @author QRS
+# @home qrsforever.github.io
+# @version 1.0
+# @date 2019-05-09 14:47:19
+
+
 import os
 import re
 import scrapy

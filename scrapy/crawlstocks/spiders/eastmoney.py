@@ -1,6 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file eastmoney.py
+# @brief 
+# @author QRS
+# @home qrsforever.github.io
+# @version 1.0
+# @date 2019-05-09 14:47:11
+
+
 import scrapy
 import re
 from scrapy_splash import SplashRequest
@@ -8,7 +16,7 @@ from scrapy_splash import SplashRequest
 from crawlstocks.items.eastmoney import StockUrlItem
 from crawlstocks.items.eastmoney import StockCwzbItem
 
-from crawlstocks.utils.common import zone_code
+from crawlstocks.utils.common import code_to_symbol
 
 class CrawlUrlSpider(scrapy.Spider):
     name = 'eastmoney.url'
@@ -37,7 +45,7 @@ class CrawlUrlSpider(scrapy.Spider):
                 res = self.re_code.search(stock)
                 if res is None:
                     continue
-                code = zone_code(res.groupdict()['code'])
+                code = code_to_symbol(res.groupdict()['code'])
                 item['stock_url'] = 'http://quote.eastmoney.com/' + code + ".html"
                 yield item
         except:

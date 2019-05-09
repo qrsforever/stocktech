@@ -77,15 +77,13 @@ class RealtimeQuotaItem(scrapy.Item):
     topest              = scrapy.Field() # 47: 涨停价
     lowest              = scrapy.Field() # 48: 跌停价
 
-
 #####################################################################################
-
 
 class CashFlowItem(scrapy.Item):
     _id           = scrapy.Field()
     code          = scrapy.Field() # 0: 股票代码
-    main_in       = scrapy.Field() # 1: 主力流入
-    main_out      = scrapy.Field() # 2: 主力流出
+    main_in       = scrapy.Field() # 1: 主力流入(万)
+    main_out      = scrapy.Field() # 2: 主力流出(万)
     main_net      = scrapy.Field() # 3: 主力净流入
     main_net_rate = scrapy.Field() # 4: 主力净流入百分比: 主力净流入/主力总资金 ?
     priv_in       = scrapy.Field() # 5: 散户流入
@@ -104,3 +102,28 @@ class CashFlowItem(scrapy.Item):
     unkown3       = scrapy.Field() # 18:
     unkown4       = scrapy.Field() # 19:
     datetime      = scrapy.Field() # 20: 日期时间戳
+    
+
+#####################################################################################
+
+
+class TapeReadingItem(scrapy.Item):
+    _id          = scrapy.Field()
+    rec_datetime = scrapy.Field() # 爬取的时间
+
+    unkown1      = scrapy.Field() # 0: 未知
+    name         = scrapy.Field() # 1: 股票名称
+    code         = scrapy.Field() # 2: 股票代码
+    price        = scrapy.Field() # 3: 当前价格
+    chg          = scrapy.Field() # 4: 涨跌
+    pchg         = scrapy.Field() # 5: 涨跌%
+    volume       = scrapy.Field() # 6: 成交量(100手)
+    amount       = scrapy.Field() # 7: 成交额(万)
+    unkown2      = scrapy.Field() # 8:
+    tcap         = scrapy.Field() # 9: 总市值
+
+    b_big_deal   = scrapy.Field() # 0: 买盘大单 (100%)
+    b_small_deal = scrapy.Field() # 1: 买盘小单
+    s_big_deal   = scrapy.Field() # 2: 卖盘大单
+    s_small_deal = scrapy.Field() # 3: 卖盘小单
+

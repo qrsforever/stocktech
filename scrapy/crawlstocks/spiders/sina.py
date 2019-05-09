@@ -8,11 +8,11 @@ import datetime
 import scrapy
 
 from crawlstocks.items.sina import LatestQuotaItem
-from crawlstocks.utils.common import zone_code, is_stock_opening
+from crawlstocks.utils.common import code_to_symbol, is_stock_opening
 
 class CrawlLatestQuotationSpider(scrapy.Spider):
     name = 'sina.latestquota'
-    debug = True
+    debug = False
 
     allowed_domains = ['hq.sinajs.cn']
 
@@ -49,7 +49,7 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
             p = 10
             symbols = []
             for i, each in enumerate(codes, 1):
-                symbols.append(zone_code(each))
+                symbols.append(code_to_symbol(each))
                 if i % p == 0:
                     yield scrapy.Request(url=url0+','.join(symbols), dont_filter=True)
                     symbols = []
