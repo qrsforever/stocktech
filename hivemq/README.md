@@ -21,6 +21,8 @@
 
 - `export JAVA_OPTS="$JAVA_OPTS -Dhivemq.config.folder=${STOCKTECH_DIR}/hivemq/conf"`
 
+- `export JAVA_OPTS="$JAVA_OPTS -Dhivemq.extensions.folder=$${STOCKTECH_DIR}/hivemq/extensions"`
+
 - `xstart_hivemq`
 
 - `netstat -an | grep 1883
@@ -31,6 +33,10 @@
 
 - username:`amdin` password:`hivemq`
 
+## extensions
+
+[sdk sample](https://github.com/hivemq/hivemq-extension-sdk)
+
 
 ## others
 
@@ -38,3 +44,4 @@
 
 [连接报文](https://www.hivemq.com/blog/mqtt-essentials-part-3-client-broker-connection-establishment/)
 
+[extensions介绍](https://www.hivemq.com/docs/4/extensions/introduction.html)

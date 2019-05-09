@@ -7,7 +7,13 @@
 
 export STOCKTECH_DIR=/system/source/stocktech
 
-
-# hivemq
-export HIVEMQ_PORT=1883
-export JAVA_OPTS="$JAVA_OPTS -Dhivemq.config.folder=${STOCKTECH_DIR}/hivemq/conf"
+for file in `ls $STOCKTECH_DIR 2>/dev/null`
+do
+    path=$STOCKTECH_DIR/$file
+    if [ -d $path -a -e $path/env.sh ]
+    then
+        cd $path 2>/dev/null
+        source env.sh
+        cd - 1>/dev/null
+    fi
+done
