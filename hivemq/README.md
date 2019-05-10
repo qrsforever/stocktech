@@ -37,6 +37,16 @@
 
 [sdk sample](https://github.com/hivemq/hivemq-extension-sdk)
 
+### 
+
+    mvn archetype:generate \
+        -DarchetypeGroupId=com.hivemq \
+        -DarchetypeArtifactId=hivemq-extension-archetype \
+        -DarchetypeVersion=4.0.0 \
+        -DgroupId=com.hivemq.extensions \
+        -DartifactId=stocktech-extension \
+        -DpackageName=com.hivemq.extensions.Stocktech \
+        -DinteractiveMode=false
 
 ## others
 

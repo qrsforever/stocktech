@@ -27,8 +27,9 @@ class CashFlowPipeline(object):
 class TapeReadingPipeline(object):
 
     def process_item(self, item, spider):
-        if item['b_big_deal'] > 30 or \
-                item['b_big_deal'] + item['b_small_deal'] > 75:
+        if item['b_big_deal'] > 45 or \
+               (item['b_big_deal'] > 15 and \
+                item['b_big_deal'] + item['b_small_deal'] > 70):
             body = """<html><body>
             <h2>大单提醒</h2>
             <table align='center' cellpadding='10' cellspacing="4">
@@ -50,6 +51,6 @@ class TapeReadingPipeline(object):
                 '涨跌率', item['pchg'],
                 '成交量', item['volume'],
                 '成交额', item['amount'],
-                '买大单', item['b_big_deal'],
-                '买小单', item['b_small_deal']), 'html')
+                '大买单', item['b_big_deal'],
+                '小买单', item['b_small_deal']), 'html')
         return item
