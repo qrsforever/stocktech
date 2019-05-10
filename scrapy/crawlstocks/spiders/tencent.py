@@ -423,7 +423,7 @@ class CrawlTapeReadingSpider(scrapy.Spider):
 
     allowed_domains = [ 'qt.gtimg.cn' ]
 
-    debug = True
+    debug = False
 
     custom_settings = {
             'DOWNLOAD_DELAY': 0.5,
