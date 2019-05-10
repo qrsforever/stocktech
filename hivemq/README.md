@@ -72,6 +72,13 @@
     unzip src/stocktech-extension/target/stocktech-extension-1.0.0-distribution.zip -d extensions
 
 
+## Test
+
+### use mosquitto\_pub 
+
+    mosquitto_pub -h localhost -p 1883 -u stocktech -P stocktech -i 985612771 -t 985612771/stocktech/tapereading/up -m "test"
+
+
 ## others
 
 [默认配置](https://www.hivemq.com/docs/4.1/hivemq/configuration.html#default)

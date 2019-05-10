@@ -4,7 +4,7 @@
 /// @version 1.0.0
 /// @date 2019-05-10
 
-package com.hivemq.extensions.stocktech;
+package com.hivemq.extensions.stocktech.auth;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.extension.sdk.api.annotations.Nullable;
@@ -12,12 +12,16 @@ import com.hivemq.extension.sdk.api.auth.Authenticator;
 import com.hivemq.extension.sdk.api.auth.parameter.AuthenticatorProviderInput;
 import com.hivemq.extension.sdk.api.services.auth.provider.AuthenticatorProvider;
 
-public class StocktechAuthenticatorProvider implements AuthenticatorProvider {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    private final @NotNull StocktechAuthenticator authenticator;
+public class FileAuthenticatorProvider implements AuthenticatorProvider {
 
-    StocktechAuthenticatorProvider(String file) {
-        this.authenticator = new StocktechAuthenticator(file);
+    private static final @NotNull Logger log = LoggerFactory.getLogger(FileAuthenticatorProvider.class);
+    private final @NotNull FileAuthenticator authenticator;
+
+    public FileAuthenticatorProvider(String resourceDir) {
+        this.authenticator = new FileAuthenticator(resourceDir);
     }
 
     @Override
