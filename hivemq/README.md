@@ -23,9 +23,11 @@
 
 - `export JAVA_OPTS="$JAVA_OPTS -Dhivemq.extensions.folder=$${STOCKTECH_DIR}/hivemq/extensions"`
 
+- `service mosquitto stop` because it bind 1883 if exist
+
 - `xstart_hivemq`
 
-- `netstat -an | grep 1883
+- `netstat -pan | grep 1883
 
 ## try out
 
@@ -37,7 +39,19 @@
 
 [sdk sample](https://github.com/hivemq/hivemq-extension-sdk)
 
-### 
+### mvn dependecy
+
+- [mongod driver](https://github.com/mongodb/mongo-java-driver)
+
+- [dom4j](https://dom4j.github.io/)
+
+[dom4j FAQ](https://github.com/dom4j/dom4j/wiki/FAQ)
+ 
+**[错误](https://my.oschina.net/u/2438514/blog/534450#comments)**
+
+**JAVA XML Parse太辣鸡, 改用mongodb**
+
+### mvn generate stocktech extension
 
     mvn archetype:generate \
         -DarchetypeGroupId=com.hivemq \
@@ -45,8 +59,18 @@
         -DarchetypeVersion=4.0.0 \
         -DgroupId=com.hivemq.extensions \
         -DartifactId=stocktech-extension \
-        -DpackageName=com.hivemq.extensions.Stocktech \
+        -Dversion=1.0.0 \
+        -Dpackage=com.hivemq.extensions.stocktech \
         -DinteractiveMode=false
+
+### mvn clean
+
+### mvn package
+
+### deploying stocktech-extension
+
+    unzip src/stocktech-extension/target/stocktech-extension-1.0.0-distribution.zip -d extensions
+
 
 ## others
 

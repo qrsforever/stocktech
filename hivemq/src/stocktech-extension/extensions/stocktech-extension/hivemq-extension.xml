@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<hivemq-extension>
+    <id>stocktech-extension</id>
+    <name>Stocktech Extension</name>
+    <version>1.0.0</version>
+    <priority>100</priority>
+    <author>qrsforever</author>
+</hivemq-extension>
