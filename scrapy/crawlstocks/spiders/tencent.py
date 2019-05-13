@@ -240,8 +240,9 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
 
     re_data = re.compile(r'v_s[h|z][0369]\d{5}="(?P<data>[^"]*)".*')
 
-    def __init__(self, codesfile=None):
+    def __init__(self, codesfile=None, force=False):
         self.codesfile = codesfile
+        self.force = force
 
     def start_requests(self):
         url0 = 'http://qt.gtimg.cn/q='
@@ -254,7 +255,7 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
                 codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
-                if datetime.datetime.now().hour >= 15:
+                if datetime.datetime.now().hour >= 15 and not self.force:
                     return
                 time.sleep(3)
                 if not is_stock_opening():
@@ -350,8 +351,9 @@ class CrawlCashFlowSpider(scrapy.Spider):
 
     re_data = re.compile(r'v_ff_s[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
 
-    def __init__(self, codesfile=None):
+    def __init__(self, codesfile=None, force=False):
         self.codesfile = codesfile
+        self.force = force
 
     def start_requests(self):
         url0 = 'http://qt.gtimg.cn/q=ff_{symbol}'
@@ -364,7 +366,7 @@ class CrawlCashFlowSpider(scrapy.Spider):
                 codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
-                if datetime.datetime.now().hour >= 15:
+                if datetime.datetime.now().hour >= 15 and not self.force:
                     return
                 time.sleep(3)
                 if not is_stock_opening():
@@ -437,8 +439,9 @@ class CrawlTapeReadingSpider(scrapy.Spider):
     re_handicap = re.compile(r'v_s_pks[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
     re_brief = re.compile(r'v_s_s[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
 
-    def __init__(self, codesfile=None):
+    def __init__(self, codesfile=None, force=False):
         self.codesfile = codesfile
+        self.force = force
 
     def start_requests(self):
         url0 = 'http://qt.gtimg.cn/q=s_pk{}'
@@ -452,7 +455,7 @@ class CrawlTapeReadingSpider(scrapy.Spider):
                 codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
-                if datetime.datetime.now().hour >= 15:
+                if datetime.datetime.now().hour >= 15 and not self.force:
                     return
                 time.sleep(5)
                 if not is_stock_opening():

@@ -26,8 +26,9 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
 
     re_data = re.compile(r'var hq_str_s[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
 
-    def __init__(self, codesfile=None):
+    def __init__(self, codesfile=None, force=False):
         self.codesfile = codesfile
+        self.force = force
 
     def start_requests(self):
         url0 = 'http://hq.sinajs.cn/list='
@@ -40,7 +41,7 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
                 codes = [each.strip('\n') for each in f.readlines()]
         while True:
             if not self.debug:
-                if datetime.datetime.now().hour >= 15:
+                if datetime.datetime.now().hour >= 15 and not self.force:
                     return
                 time.sleep(3)
                 if not is_stock_opening():
