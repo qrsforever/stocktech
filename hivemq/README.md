@@ -47,9 +47,7 @@
 
 [dom4j FAQ](https://github.com/dom4j/dom4j/wiki/FAQ)
  
-**[错误](https://my.oschina.net/u/2438514/blog/534450#comments)**
-
-**JAVA XML Parse太辣鸡, 改用mongodb**
+**[错误](https://my.oschina.net/u/2438514/blog/534450#comments), 使用java自带的xml解析**
 
 ### mvn generate stocktech extension
 

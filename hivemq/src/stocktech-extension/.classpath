@@ -11,16 +11,22 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="M2_REPO/com/hivemq/hivemq-extension-sdk/4.0.0/hivemq-extension-sdk-4.0.0.jar" sourcepath="M2_REPO/com/hivemq/hivemq-extension-sdk/4.0.0/hivemq-extension-sdk-4.0.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/dropwizard/metrics/metrics-core/4.0.2/metrics-core-4.0.2.jar" sourcepath="M2_REPO/io/dropwizard/metrics/metrics-core/4.0.2/metrics-core-4.0.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mongodb/mongodb-driver/3.10.2/mongodb-driver-3.10.2.jar" sourcepath="M2_REPO/org/mongodb/mongodb-driver/3.10.2/mongodb-driver-3.10.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mongodb/bson/3.10.2/bson-3.10.2.jar" sourcepath="M2_REPO/org/mongodb/bson/3.10.2/bson-3.10.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mongodb/mongodb-driver-core/3.10.2/mongodb-driver-core-3.10.2.jar" sourcepath="M2_REPO/org/mongodb/mongodb-driver-core/3.10.2/mongodb-driver-core-3.10.2-sources.jar"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 			<attribute name="test" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">

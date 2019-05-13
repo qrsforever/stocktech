@@ -38,27 +38,27 @@ class LatestQuotaPipeline(object):
 
         if total_buy_vol == 0:
             spider.logger.warn('buy volum is 0')
-            return
+            return item
         if total_sell_vol == 0:
             spider.logger.warn('sell volum is 0')
-            return
+            return item
 
         total = total_buy_vol + total_sell_vol
-        buy = (buy1 + buy2 + buy3 + buy4 + buy5) / total_buy_vol
-        sell = (sell1 + sell2 + sell3 + sell4 + sell5) / total_sell_vol
+        buy_avg = (buy1 + buy2 + buy3 + buy4 + buy5) / total_buy_vol
+        sell_avg = (sell1 + sell2 + sell3 + sell4 + sell5) / total_sell_vol
         buy_v_rate = 100 * total_buy_vol/total
         sell_v_rate = 100 * total_sell_vol/total
-        buy_p_rate = (item['price'] - buy) * 100 / (sell - buy)
-        sell_p_rate = (sell-item['price']) * 100 / (sell - buy)
+        buy_p_rate = (item['price'] - buy_avg) * 100 / (sell_avg - buy_avg)
+        sell_p_rate = (sell_avg-item['price']) * 100 / (sell_avg - buy_avg)
 
         spider.logger.info('%s %s %.2f%% vs %.2f%% | %.2f%% vs %.2f%% | '\
                 ' %.2f vs %.2f | %.2f %.2f'% \
                 (item['code'], item['name'], buy_v_rate, sell_v_rate, buy_p_rate,
-                    sell_p_rate, buy, sell, item['price'], item['settlement']))
+                    sell_p_rate, buy_avg, sell_avg, item['price'], item['settlement']))
         try:
             self.file.write('%s %s %.2f%% %.2f%% %.2f%% %.2f%% %.2f %.2f %.2f\n' % \
                 (item['code'], item['name'], buy_v_rate, sell_v_rate,
-                    buy_p_rate, sell_p_rate, buy, sell, item['price']))
+                    buy_p_rate, sell_p_rate, buy_avg, sell_avg, item['price']))
         except Exception as e:
              spider.logger.info("write error:", e)
         return item
@@ -67,7 +67,7 @@ class LatestQuotaPipeline(object):
         try:
             self.file = open(self.filepath, "w", encoding='utf-8')
             self.file.write('{} {} {} {} {} {} {} {} {} {}\n'
-                    .format('股票码', '股票名', '买量率', '卖量率', '买价距', '卖价距', \
+                    .format('股票码', '股票名', '买量率', '卖量率', '买距比', '卖价', \
                             '买均价', '卖均价', '当前价', '昨收', chr(12288)))
         except Exception as e:
             spider.logger.info("open error:", e)

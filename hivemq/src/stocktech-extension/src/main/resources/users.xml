@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <users>
-    <user>
+    <user clientid='100001'>
         <name>stocktech</name>
-        <password>abcd1234</password>
+        <password>stocktech</password>
+    </user>
+    <user clientid='100002'>
+        <name>stocktech</name>
+        <password>stocktech</password>
     </user>
 </users>

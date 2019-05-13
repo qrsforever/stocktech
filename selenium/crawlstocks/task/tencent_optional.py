@@ -98,6 +98,5 @@ def crawl_tencent_optional():
     except Exception as e:
         logger.error(e)
     finally:
-        time.sleep(1000)
         logger.info('browser quit')
         browser.quit()

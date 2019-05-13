@@ -26,6 +26,14 @@ categories: [stock]
 
     ```
 
+- [`sudo apt-get install xvfb`](https://www.cnblogs.com/happyday56/p/9006629.html)
+
+    无界面自动化
+
+- [`sudo pip3 install xvfbwrapper`](https://cloud.tencent.com/developer/ask/107705)
+
+    无界面自动化(推荐)
+
 # Usage
 
 - `./main.py list`

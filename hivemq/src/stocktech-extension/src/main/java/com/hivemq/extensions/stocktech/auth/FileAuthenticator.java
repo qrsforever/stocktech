@@ -17,25 +17,31 @@ import com.hivemq.extension.sdk.api.packets.connect.ConnectPacket;
 
 import com.hivemq.extension.sdk.api.services.builder.Builders;
 
-import java.nio.charset.Charset; 
+import java.nio.charset.Charset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hivemq.extensions.stocktech.utils.UserPasswordParser;
+import com.hivemq.extensions.stocktech.utils.UserPasswordParser.UserInfo;
+
 public class FileAuthenticator implements SimpleAuthenticator {
 
-    private static final @NotNull Logger log = LoggerFactory.getLogger(FileAuthenticator.class);
+    private static final Logger log = LoggerFactory.getLogger(FileAuthenticator.class);
+
+    private UserPasswordParser parser;
 
     private final String[] topics = {
-        "/stocktech/tapereading/up",
-        "/stocktech/tapereading/down",
+        "/stocktech/tapereading/#",
+        "/stocktech/latestquota/#",
     };
 
-    FileAuthenticator(@NotNull String resourceDir) {
+    public FileAuthenticator(@NotNull String resourceDir) {
+        parser = new UserPasswordParser(resourceDir + "/users.xml");
     }
 
     @Override
-    public void onConnect(@NotNull final SimpleAuthInput input, 
+    public void onConnect(@NotNull final SimpleAuthInput input,
             @NotNull final SimpleAuthOutput output) {
 
         ConnectPacket connect = input.getConnectPacket();
@@ -62,8 +68,8 @@ public class FileAuthenticator implements SimpleAuthenticator {
             return;
         }
 
-        // TODO need check using urers.xml
-        if (!username.equals("stocktech") || !password.equals("stocktech")) {
+        UserInfo info = parser.getUserInfo(clientId);
+        if (!username.equals(info.name) || !password.equals(info.password)) {
             output.failAuthentication(ConnackReasonCode.BAD_USER_NAME_OR_PASSWORD,
                     "username or password error");
         }
