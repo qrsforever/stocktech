@@ -67,7 +67,7 @@ class LatestQuotaPipeline(object):
         try:
             self.file = open(self.filepath, "w", encoding='utf-8')
             self.file.write('{} {} {} {} {} {} {} {} {} {}\n'
-                    .format('股票码', '股票名', '买量率', '卖量率', '买距比', '卖价', \
+                    .format('股票码', '股票名', '买量率', '卖量率', '买距比', '卖距比', \
                             '买均价', '卖均价', '当前价', '昨收', chr(12288)))
         except Exception as e:
             spider.logger.info("open error:", e)

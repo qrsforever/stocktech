@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file netease163.py
+# @brief
+# @author QRS
+# @blog qrsforever.github.io
+# @version 1.0
+# @date 2019-05-04 10:09:12
+
 from pymongo import MongoClient
 
 class CHDDataPipeline(object):

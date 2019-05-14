@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file tencent.py
+# @brief
+# @author QRS
+# @blog qrsforever.github.io
+# @version 1.0
+# @date 2019-05-04 10:09:28
+
 from pymongo import MongoClient
 
 class TickDetailPipeline(object):

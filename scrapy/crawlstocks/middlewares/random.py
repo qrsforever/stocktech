@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file download.py
+# @brief
+# @author QRS
+# @blog qrsforever.github.io
+# @version 1.0
+# @date 2019-05-05 11:15:17
+
 import random
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 from fake_useragent import UserAgent

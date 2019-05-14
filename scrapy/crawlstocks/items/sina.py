@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file sina.py
+# @brief
+# @author QRS
+# @blog qrsforever.github.io
+# @version 1.0
+# @date 2019-05-05 18:07:27
+
 import scrapy
 
 class LatestQuotaItem(scrapy.Item):

@@ -4,7 +4,7 @@
 # @file tencent.py
 # @brief
 # @author QRS
-# @home qrsforever.github.io
+# @blog qrsforever.github.io
 # @version 1.0
 # @date 2019-05-07 15:31:37
 
@@ -356,7 +356,7 @@ class CrawlCashFlowSpider(scrapy.Spider):
         self.force = force
 
     def start_requests(self):
-        url0 = 'http://qt.gtimg.cn/q=ff_{symbol}'
+        url0 = 'http://qt.gtimg.cn/q=ff_{}'
         codes = list()
         if self.codesfile:
             with open(self.codesfile, 'r') as f:

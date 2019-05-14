@@ -4,7 +4,7 @@
 # @file common.py
 # @brief
 # @author QRS
-# @home qrsforever.github.io
+# @blog qrsforever.github.io
 # @version 1.0
 # @date 2019-05-09 14:47:28
 

@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# @file spider.py
+# @brief
+# @author QRS
+# @blog qrsforever.github.io
+# @version 1.0
+# @date 2019-05-14 10:03:02
+
 class CatchExceptionMiddleware(object):
     @classmethod
     def from_crawler(cls, crawler):

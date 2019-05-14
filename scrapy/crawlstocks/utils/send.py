@@ -4,7 +4,7 @@
 # @file send.py
 # @brief
 # @author QRS
-# @home qrsforever.github.io
+# @blog qrsforever.github.io
 # @version 1.0
 # @date 2019-05-09 16:58:28
 
