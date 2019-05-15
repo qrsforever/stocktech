@@ -1,14 +1,15 @@
 #!/bin/bash
 #=================================================================
-# date: 2019-05-09 21:39:06
-# title: .env
+# date: 2019-05-15 13:17:47
+# title: env
 #=================================================================
 
-export STOCKTECH_DIR=/system/source/stocktech
+stocktech_reminder_dir=`dirname ${BASH_SOURCE[0]}`
+stocktech_reminder_dir=`cd ${stocktech_reminder_dir}; pwd`
 
-for file in `ls $STOCKTECH_DIR 2>/dev/null`
+for file in `ls $stocktech_reminder_dir 2>/dev/null`
 do
-    path=$STOCKTECH_DIR/$file
+    path=$stocktech_reminder_dir/$file
     if [ -d $path -a -e $path/.env.sh ]
     then
         cd $path 2>/dev/null

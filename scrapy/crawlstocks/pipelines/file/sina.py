@@ -56,9 +56,10 @@ class LatestQuotaPipeline(object):
                 (item['code'], item['name'], buy_v_rate, sell_v_rate, buy_p_rate,
                     sell_p_rate, buy_avg, sell_avg, item['price'], item['settlement']))
         try:
-            self.file.write('%s %s %.2f%% %.2f%% %.2f%% %.2f%% %.2f %.2f %.2f\n' % \
-                (item['code'], item['name'], buy_v_rate, sell_v_rate,
-                    buy_p_rate, sell_p_rate, buy_avg, sell_avg, item['price']))
+            self.file.write('%s %s %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %s\n' % \
+                (item['code'], item['name'], buy_v_rate, sell_v_rate, buy_p_rate,
+                    sell_p_rate, buy_avg, sell_avg, item['price'], item['settlement'],
+                    item['datetime'].strftime('%Y%m%d %H:%M:%S')))
         except Exception as e:
              spider.logger.info("write error:", e)
         return item
@@ -66,9 +67,9 @@ class LatestQuotaPipeline(object):
     def open_spider(self, spider):
         try:
             self.file = open(self.filepath, "w", encoding='utf-8')
-            self.file.write('{} {} {} {} {} {} {} {} {} {}\n'
+            self.file.write('{} {} {} {} {} {} {} {} {} {} {}\n'
                     .format('股票码', '股票名', '买量率', '卖量率', '买距比', '卖距比', \
-                            '买均价', '卖均价', '当前价', '昨收', chr(12288)))
+                            '买均价', '卖均价', '当前价', '昨收', '日期', chr(12288)))
         except Exception as e:
             spider.logger.info("open error:", e)
 

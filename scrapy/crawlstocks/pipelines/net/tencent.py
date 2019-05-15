@@ -9,6 +9,7 @@
 # @date 2019-05-08 00:00:59
 
 from crawlstocks.utils.send import send_mail
+import time
 
 class RealtimeQuotaPipeline(object):
 
@@ -26,7 +27,12 @@ class CashFlowPipeline(object):
 
 class TapeReadingPipeline(object):
 
+    rec_time = time.time() 
+
     def process_item(self, item, spider):
+        now = time.time()
+        if now - self.rec_time < 20:
+            return item
         if item['b_big_deal'] > 45 or \
                (item['b_big_deal'] > 15 and \
                 item['b_big_deal'] + item['b_small_deal'] > 70):
@@ -53,4 +59,5 @@ class TapeReadingPipeline(object):
                 '成交额', item['amount'],
                 '大买单', item['b_big_deal'],
                 '小买单', item['b_small_deal']), 'html')
+            self.rec_time = time.time()
         return item
