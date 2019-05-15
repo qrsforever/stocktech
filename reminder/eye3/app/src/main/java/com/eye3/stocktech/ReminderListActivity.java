@@ -2,10 +2,14 @@ package com.eye3.stocktech;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.app.Activity;
+import android.content.IntentFilter;
+import android.content.BroadcastReceiver;
+import android.os.Bundle;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,13 +20,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 
 public class ReminderListActivity extends Activity {
 
     public static final String TAG = ReminderListActivity.class.getSimpleName();
 
-    private ArrayList<HashMap<String, Object>> listItem = null;
-    private SimpleAdapter itemAdapter = null;
+    private ArrayList<HashMap<String, Object>> mListItem = null;
+    private SimpleAdapter mItemAdapter = null;
+    private Intent mIntent = null;
+    private MessageReceiver mMsgReceiver = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +39,10 @@ public class ReminderListActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.main);
 
-        startService(new Intent(this, ReminderMqttService.class));
+ 		mMsgReceiver = new MessageReceiver();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(Constants.ACTIONS_RECV_MESSAGE);
+		registerReceiver(mMsgReceiver, intentFilter);
 
         // mbtn_add_item = (Button)this.findViewById(R.id.btn_add);
         // mbtn_add_item.setOnClickListener(new OnClickListener() {
@@ -38,24 +50,24 @@ public class ReminderListActivity extends Activity {
         //     public void onClick(View v) {
         //         HashMap<String, Object> map = new HashMap<String, Object>();
         //         map.put("item_image", R.drawable.checked);
-        //         map.put("item_title", "Title-" + listItem.size());
+        //         map.put("item_title", "Title-" + mListItem.size());
         //         map.put("item_text", "New item!");
-        //         listItem.add(map);
-        //         itemAdapter.notifyDataSetChanged();
+        //         mListItem.add(map);
+        //         mItemAdapter.notifyDataSetChanged();
         //     }
         // });
-        ListView list_view = (ListView)this.findViewById(R.id.list_view);
-        listItem = new ArrayList<HashMap<String, Object>>();
-        itemAdapter = new SimpleAdapter(
+        ListView listView = (ListView)this.findViewById(R.id.list_view);
+        mListItem = new ArrayList<HashMap<String, Object>>();
+        mItemAdapter = new SimpleAdapter(
                 this,
-                listItem,
+                mListItem,
                 R.layout.list_item,
                 new String[] { "item_image", "item_title", "item_text" },
                 new int[] { R.id.item_image, R.id.item_title, R.id.item_text } );
 
-        list_view.setAdapter(itemAdapter);
+        listView.setAdapter(mItemAdapter);
 
-        list_view.setOnItemClickListener(new OnItemClickListener() {
+        listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
@@ -65,6 +77,33 @@ public class ReminderListActivity extends Activity {
             }
         });
 
-        // client = new ReminderMqttClient("127.0.0.1", 1883);
+        mIntent = new Intent(this, ReminderMqttService.class);
+        startService(mIntent);
+
     }
+
+    public class MessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Map<String, String> map = JSON.parseObject(payload,
+            //         new TypeReference<Map<String, String>>(){});
+
+            // for (Map.Entry<String, String> entry : map.entrySet()) {
+            //     System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+            // }
+            Map<String, Object> o = JSON.parseObject(intent.getStringExtra("payload"));
+            for (Map.Entry<String, Object> entry : o.entrySet()) {
+                Log.d(TAG, "Key:" + entry.getKey() + ", Value: " + (String)entry.getValue());
+            }
+        }
+
+    }
+
+	@Override
+	protected void onDestroy() {
+		stopService(mIntent);
+		unregisterReceiver(mMsgReceiver);
+		super.onDestroy();
+	}
 }
