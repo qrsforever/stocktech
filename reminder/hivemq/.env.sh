@@ -4,8 +4,7 @@
 # title: env
 #=================================================================
 
-stocktech_hivemq_dir=`dirname ${BASH_SOURCE[0]}`
-stocktech_hivemq_dir=`cd ${stocktech_hivemq_dir}; pwd`
+stocktech_hivemq_dir=`pwd`
 
 export HIVEMQ_PORT=1883
 export JAVA_OPTS="$JAVA_OPTS -Dhivemq.config.folder=${stocktech_hivemq_dir}/conf"

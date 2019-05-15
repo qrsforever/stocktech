@@ -27,6 +27,8 @@
     mosquitto_passwd -b /etc/mosquitto/passwd stocktech stocktech
 
 
+[好文](https://www.jianshu.com/p/3d5b487c6860)
+
 ## start&stop
 
     netstat -an | grep "1883"

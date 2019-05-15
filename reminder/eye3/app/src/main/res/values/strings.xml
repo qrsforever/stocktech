@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Stocktech</string>
+
+    <string name="app_name">StocktechReminder</string>
+    <string name="add_item">Add Item</string>
+
 </resources>

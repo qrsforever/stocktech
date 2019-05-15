@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:context=".ReminderListActivity" >
+
+    <ListView
+            android:id="@+id/list_view"
+            android:alpha="0.8"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:stackFromBottom="true"
+            android:cacheColorHint="#00000000"
+            android:transcriptMode="alwaysScroll"
+            android:listSelector="@color/coral"
+            android:fadingEdge="vertical"
+            android:fadingEdgeLength="200dp"
+            android:divider="@drawable/list_divider"  
+            android:dividerHeight="2dp"
+            android:scrollbars="horizontal|vertical"
+            android:fadeScrollbars="true"
+            android:fastScrollEnabled="true" 
+        />
+
+</LinearLayout>
+
+

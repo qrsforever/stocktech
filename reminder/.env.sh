@@ -4,8 +4,7 @@
 # title: env
 #=================================================================
 
-stocktech_reminder_dir=`dirname ${BASH_SOURCE[0]}`
-stocktech_reminder_dir=`cd ${stocktech_reminder_dir}; pwd`
+stocktech_reminder_dir=`pwd`
 
 for file in `ls $stocktech_reminder_dir 2>/dev/null`
 do

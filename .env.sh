@@ -4,6 +4,8 @@
 # title: .env
 #=================================================================
 
+ENTER_DIR=`pwd`
+
 export STOCKTECH_DIR=/system/source/stocktech
 
 for file in `ls $STOCKTECH_DIR 2>/dev/null`
@@ -16,3 +18,6 @@ do
         cd - 1>/dev/null
     fi
 done
+
+
+cd $ENTER_DIR
