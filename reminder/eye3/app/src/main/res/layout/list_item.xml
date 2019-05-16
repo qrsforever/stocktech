@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/RelativeLayout01"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dip"
@@ -22,10 +22,11 @@
             android:textSize="20dip"
         />
     <TextView
-            android:id="@+id/item_text"
+            android:id="@+id/item_brief"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
             android:layout_below="@+id/item_title"
-            android:text="item_text"
+            android:gravity="center"
+            android:text="item_brief"
         />
 </RelativeLayout>

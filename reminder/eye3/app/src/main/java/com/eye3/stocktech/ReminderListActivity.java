@@ -1,3 +1,10 @@
+/// @file ReminderListActivity.java
+/// @brief
+/// @author QRS
+/// @blog qrsforever.github.io
+/// @version 1.0
+/// @date 2019-05-15 18:39:14
+
 package com.eye3.stocktech;
 
 import java.util.ArrayList;
@@ -28,6 +35,7 @@ public class ReminderListActivity extends Activity {
 
     public static final String TAG = ReminderListActivity.class.getSimpleName();
 
+    private Context mContext;
     private ArrayList<HashMap<String, Object>> mListItem = null;
     private SimpleAdapter mItemAdapter = null;
     private Intent mIntent = null;
@@ -37,33 +45,22 @@ public class ReminderListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate " + this.hashCode());
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.main);
+        setContentView(R.layout.main);
+        mContext = this;
 
  		mMsgReceiver = new MessageReceiver();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(Constants.ACTIONS_RECV_MESSAGE);
 		registerReceiver(mMsgReceiver, intentFilter);
 
-        // mbtn_add_item = (Button)this.findViewById(R.id.btn_add);
-        // mbtn_add_item.setOnClickListener(new OnClickListener() {
-        //     @Override
-        //     public void onClick(View v) {
-        //         HashMap<String, Object> map = new HashMap<String, Object>();
-        //         map.put("item_image", R.drawable.checked);
-        //         map.put("item_title", "Title-" + mListItem.size());
-        //         map.put("item_text", "New item!");
-        //         mListItem.add(map);
-        //         mItemAdapter.notifyDataSetChanged();
-        //     }
-        // });
         ListView listView = (ListView)this.findViewById(R.id.list_view);
         mListItem = new ArrayList<HashMap<String, Object>>();
         mItemAdapter = new SimpleAdapter(
                 this,
                 mListItem,
                 R.layout.list_item,
-                new String[] { "item_image", "item_title", "item_text" },
-                new int[] { R.id.item_image, R.id.item_title, R.id.item_text } );
+                new String[] { "item_image", "item_title", "item_brief" },
+                new int[] { R.id.item_image, R.id.item_title, R.id.item_brief } );
 
         listView.setAdapter(mItemAdapter);
 
@@ -71,9 +68,11 @@ public class ReminderListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
-                Log.d(TAG, "onItemClick " + this.hashCode());
-                // HashMap<String,String> map=(HashMap<String,String>)parent.getItemAtPosition(position);
-                ReminderListActivity.this.setTitle("On click " + position + " item");
+                Log.d(TAG, "onItemClick[" +  position + "]");
+                HashMap<String,String> listmap =(HashMap<String,String>)parent.getItemAtPosition(position);
+                if (listmap != null) {
+                    new ReminderDialog(mContext, listmap.get("item_body")).show();
+                }
             }
         });
 
@@ -86,18 +85,20 @@ public class ReminderListActivity extends Activity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Map<String, String> map = JSON.parseObject(payload,
-            //         new TypeReference<Map<String, String>>(){});
-
-            // for (Map.Entry<String, String> entry : map.entrySet()) {
-            //     System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-            // }
-            Map<String, Object> o = JSON.parseObject(intent.getStringExtra("payload"));
-            for (Map.Entry<String, Object> entry : o.entrySet()) {
-                Log.d(TAG, "Key:" + entry.getKey() + ", Value: " + (String)entry.getValue());
-            }
+            String payload = intent.getStringExtra("payload");
+            Log.d(TAG, "payload = " + payload);
+            Map<String, Object> map = JSON.parseObject(intent.getStringExtra("payload"));
+            HashMap<String, Object> listmap = new HashMap<String, Object>();
+            if (1 == (int)map.get("predict"))
+                listmap.put("item_image", R.drawable.up);
+            else
+                listmap.put("item_image", R.drawable.down);
+            listmap.put("item_title", map.get("title"));
+            listmap.put("item_brief", map.get("brief"));
+            listmap.put("item_body", map.get("body"));
+            mListItem.add(listmap);
+            mItemAdapter.notifyDataSetChanged();
         }
-
     }
 
 	@Override

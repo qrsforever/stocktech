@@ -1,3 +1,10 @@
+/// @file ReminderMqttService.java
+/// @brief
+/// @author QRS
+/// @blog qrsforever.github.io
+/// @version 1.0
+/// @date 2019-05-15 20:29:44
+
 package com.eye3.stocktech;
 
 import android.content.Context;
@@ -8,7 +15,9 @@ import android.os.IBinder;
 import android.app.Service;
 import android.util.Log;
 import android.widget.Toast;
+
 import java.util.HashMap;
+import java.io.UnsupportedEncodingException;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -67,7 +76,8 @@ public class ReminderMqttService extends Service {
                     Toast.makeText(getApplicationContext(), "Connnect Success",
                             Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe("aaa", 0);
+                        client.subscribe(Constants.SUB_TOPIC_LATESTQUOTA, 0);
+                        client.subscribe(Constants.SUB_TOPIC_TAPEREADING, 0);
                     } catch (MqttException e) {
                         Log.e(TAG, "Exception Occured", e);
                     }
@@ -93,7 +103,16 @@ public class ReminderMqttService extends Service {
         @Override
         public void messageArrived(String topic, MqttMessage msg){
             Log.i(TAG, "Received Topic : " + topic);
-            Log.i(TAG, "Payload: " + new String(msg.getPayload()));
+            try {
+                String payload = new String(msg.getPayload(), "utf-8");
+                Log.i(TAG, "Payload: " + payload);
+                Intent intent = new Intent();
+                intent.setAction(Constants.ACTIONS_RECV_MESSAGE);
+                intent.putExtra("payload", payload);
+                sendBroadcast(intent);
+            }catch (UnsupportedEncodingException e) {
+                Log.e(TAG, "Exception Occured", e);
+            }   
         }
 
         @Override

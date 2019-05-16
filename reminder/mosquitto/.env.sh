@@ -8,5 +8,6 @@ stocktech_mosquitto_dir=`pwd`
 
 xstart_mosquitto() {
     sudo service mosquitto stop
+    sleep 1
     mosquitto -c $stocktech_mosquitto_dir/etc/mosquitto.conf -v
 }
