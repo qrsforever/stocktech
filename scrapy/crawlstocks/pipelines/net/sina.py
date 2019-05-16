@@ -9,8 +9,13 @@
 # @date 2019-05-08 00:01:12
 
 from crawlstocks.utils.send import send_mail
+from crawlstocks.utils.send import send_mqtt
+
+import json
 
 class LatestQuotaPipeline(object):
+
+    topic = '/stocktech/reminder/latestquota'
 
     def process_item(self, item, spider):
         buy1 = item['b1_v'] * item['b1_p']  # buy
@@ -43,13 +48,15 @@ class LatestQuotaPipeline(object):
         buy_p_rate = round((item['price'] - buy) * 100 / (sell - buy), 2)
         sell_p_rate = round((sell-item['price']) * 100 / (sell - buy), 2)
 
-        if sell_p_rate >= 73 or sell_p_rate <= 27:
-            title="买强看涨提醒"
+        if True or sell_p_rate >= 73 or sell_p_rate <= 27:
+            title="看涨提醒"
+            up = 1
             if sell_p_rate > buy_p_rate:
-                title="卖强看跌提醒"
+                title="看跌提醒"
+                up = 0
             body = """<html><body>
             <h2>{}</h2>
-            <table align='center' cellpadding='10' cellspacing="4">
+            <table align='center' cellpadding='10' cellspacing="6">
                 <tr><td>{}</td><td>{}</td></tr>
                 <tr><td>{}</td><td>{}</td></tr>
                 <tr><td>{}</td><td>{}</td></tr>
@@ -60,9 +67,9 @@ class LatestQuotaPipeline(object):
                 <tr><td>{}</td><td>{}%</td></tr>
                 <tr><td>{}</td><td>{}%</td></tr>
                 <tr><td>{}</td><td>{}%</td></tr>
-                <tr><td>{}</td><td>{</td></tr>
+                <tr><td>{}</td><td>{}</td></tr>
             </table></body></html>"""
-            send_mail(body.format(title,
+            payload = body.format(title,
                 '股票名', item['name'],
                 '股票码', item['code'],
                 '当前价', item['price'],
@@ -73,6 +80,16 @@ class LatestQuotaPipeline(object):
                 '卖量比', sell_v_rate,
                 '买价比', buy_p_rate,
                 '卖价比', sell_p_rate,
-                '时间', item['datetime'].strftime('%Y%m%d-%H:%M:%S')
-                ), 'html')
+                '时间', item['datetime'].strftime('%Y%m%d-%H:%M:%S'))
+            send_mail(payload, 'html')
+
+            send_mqtt(self.topic, json.dumps({
+                'title': title,
+                'brief': '%s %8s %8s %8s %10s' % (
+                    item['name'], item['code'],
+                    item['price'], item['settlement'],
+                    item['datetime'].strftime('%H:%M:%S')),
+                'predict': up,
+                'body': payload
+                }, ensure_ascii=False))
         return item

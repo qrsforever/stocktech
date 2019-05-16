@@ -33,9 +33,11 @@ class CrawlLatestQuotationSpider(scrapy.Spider):
 
     re_data = re.compile(r'var hq_str_s[h|z](?P<code>[0369]\d{5})="(?P<data>[^"]*)".*')
 
-    def __init__(self, codesfile=None, force=False):
+    def __init__(self, codesfile=None, force=False, debug=None):
         self.codesfile = codesfile
         self.force = force
+        if debug:
+            self.debug = True
 
     def start_requests(self):
         url0 = 'http://hq.sinajs.cn/list='

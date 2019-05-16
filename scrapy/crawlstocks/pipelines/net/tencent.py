@@ -30,12 +30,11 @@ class TapeReadingPipeline(object):
     rec_time = time.time() 
 
     def process_item(self, item, spider):
-        now = time.time()
-        if now - self.rec_time < 20:
-            return item
         if item['b_big_deal'] > 45 or \
                (item['b_big_deal'] > 15 and \
                 item['b_big_deal'] + item['b_small_deal'] > 70):
+            if time.time() - self.rec_time < 20: return item
+
             body = """<html><body>
             <h2>大单提醒</h2>
             <table align='center' cellpadding='10' cellspacing="4">
