@@ -19,6 +19,7 @@ public final class Constants {
     public final static String PUB_TOPIC_WILL = "/stocktech/reminder/will";
     public final static String SUB_TOPIC_LATESTQUOTA = "/stocktech/reminder/latestquota";
     public final static String SUB_TOPIC_TAPEREADING = "/stocktech/reminder/tapereading";
+    public final static String SUB_TOPIC_LEADERNEWS  = "/stocktech/reminder/leadernews";
 
     public final static String ACTIONS_RECV_MESSAGE = "com.eye3.stocktech.recv.message";
 }

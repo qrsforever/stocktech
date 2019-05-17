@@ -19,5 +19,19 @@ do
     fi
 done
 
+xrm_lessxk_files() {
+    if [[ x$# != x2 ]]
+    then
+        echo "xrm_lessxk_files dir num"
+        return
+    fi
+    echo "$ find $1 -size $2k -type f | xargs rm"
+    echo -n "confirm(y/n): "
+    read confirm
+    if [[ x$confirm == xy ]]
+    then
+        find $1 -size $2k -type f | xargs rm
+    fi
+}
 
 cd $ENTER_DIR

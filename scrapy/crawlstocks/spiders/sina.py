@@ -8,16 +8,18 @@
 # @version 1.0
 # @date 2019-05-14 10:06:06
 
+import scrapy
+from scrapy.spiders import Spider
+
 import re
 from io import StringIO
 import time
 import datetime
-import scrapy
 
 from crawlstocks.items.sina import LatestQuotaItem
 from crawlstocks.utils.common import code_to_symbol, is_stock_opening
 
-class CrawlLatestQuotationSpider(scrapy.Spider):
+class CrawlLatestQuotationSpider(Spider):
     name = 'sina.latestquota'
     debug = False
 

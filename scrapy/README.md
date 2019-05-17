@@ -4,7 +4,7 @@ title: 爬取股票信息
 
 date: 2019-04-11 15:03:18
 tags: [crawl]
-categories: [stock]
+categories: [stocktech]
 
 ---
 
@@ -121,6 +121,14 @@ cd selenium; ./main.py crawl_tencent_optional
 scrapy crawl tencent.realtimequota -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
 ```
 
+## tencent.cashflow
+
+爬取盘口交易, 现金流
+
+## tencent.tapereading
+
+爬取盘口交易, 大单小单百分比
+
 ## sina.latestquota
 
 通过新浪接口实时获取最新行情
@@ -129,6 +137,10 @@ scrapy crawl tencent.realtimequota -a codesfile=/media/lidong/udisk/stocktech/fi
 cd selenium; ./main.py crawl_tencent_optional
 scrapy crawl sina.latestquota -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
 ```
+
+## xinhuanet.leardernews
+
+爬取国家最高领导的新闻(新华网)
 
 
 # 数据网站

@@ -13,8 +13,11 @@ import datetime
 
 class LatestQuotaPipeline(object):
     def __init__(self, tmpdir):
-        ts = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-        self.filepath = os.path.join(tmpdir, ts + '.' + 'latestquota.txt')
+        tmpdir = os.path.join(tmpdir, 'sina.latestquota')
+        if not os.path.exists(tmpdir):
+            os.makedirs(tmpdir)
+        ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        self.filepath = os.path.join(tmpdir, ts + '.txt')
 
     @classmethod
     def from_crawler(cls, crawler):

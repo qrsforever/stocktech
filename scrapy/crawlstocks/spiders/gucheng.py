@@ -14,12 +14,12 @@ import re
 import scrapy
 
 from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import CrawlSpider, Rule
+from scrapy.spiders import Spider, CrawlSpider, Rule
 
 from crawlstocks.items.gucheng import StockCodeItem
 from crawlstocks.items.gucheng import FinancialInfoItem
 
-class CrawlStockCodeSpider(scrapy.Spider):
+class CrawlStockCodeSpider(Spider):
     name = 'gucheng.stockcode'
     debug = False
 

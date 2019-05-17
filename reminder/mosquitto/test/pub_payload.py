@@ -31,11 +31,7 @@ body = """<html><body>
     <tr><td>{}</td><td>{}</td></tr>
 </table></body></html>"""
 
-payload = {
-    'title': '大单提醒', 
-    'brief': '601992  金隅集团  3.41  3.42  09:25:03',
-    'predict': 0,
-    'body': body.format('大单提醒',
+body = body.format('大单提醒',
         '股票码', '601992',
         '股票名', '金隅集团',
         '买量率', '55.35',
@@ -49,17 +45,24 @@ payload = {
         '前二买', '20',
         '前二卖', '20',
         '日期', '20190516 09:25:03')
+
+url = 'http://www.xinhuanet.com/politics/leaders/2019-05/16/c_1124502438.htm'
+
+payload = {
+    'title': '大单提醒', 
+    'brief': '601992  金隅集团  3.41  3.42  09:25:03',
+    'predict': 0,
+    'body': url
 }
 
 def main():
     data = json.dumps(payload, ensure_ascii=False)
-    print(data)
 
     client = mqtt.Client('pub000002')
     client.username_pw_set('stocktech', 'stocktech');
     client.connect(os.environ.get('HOST', '127.0.0.1'), 1883, 60)
     client.publish('/stocktech/reminder/tapereading', data, qos=0)
-    time.sleep(5)
+    time.sleep(1)
 
 if __name__ == "__main__":
     main()

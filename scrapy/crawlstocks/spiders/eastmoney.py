@@ -10,6 +10,7 @@
 
 
 import scrapy
+from scrapy.spiders import Spider
 import re
 from scrapy_splash import SplashRequest
 
@@ -18,7 +19,7 @@ from crawlstocks.items.eastmoney import StockCwzbItem
 
 from crawlstocks.utils.common import code_to_symbol
 
-class CrawlUrlSpider(scrapy.Spider):
+class CrawlUrlSpider(Spider):
     name = 'eastmoney.url'
     allowed_domains = [
             #  'quote.eastmoney.com',
@@ -55,7 +56,7 @@ class CrawlUrlSpider(scrapy.Spider):
 #####################################################################################
 
 
-class CrawlCwzbSpider(scrapy.Spider):
+class CrawlCwzbSpider(Spider):
     name = 'eastmoney.cwzb'
     debug = False
 

@@ -78,6 +78,7 @@ public class ReminderMqttService extends Service {
                     try {
                         client.subscribe(Constants.SUB_TOPIC_LATESTQUOTA, 0);
                         client.subscribe(Constants.SUB_TOPIC_TAPEREADING, 0);
+                        client.subscribe(Constants.SUB_TOPIC_LEADERNEWS, 0);
                     } catch (MqttException e) {
                         Log.e(TAG, "Exception Occured", e);
                     }

@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import scrapy
+from scrapy.spiders import Spider
+
 from io import StringIO
 from datetime import datetime
 from pymongo import MongoClient
@@ -10,7 +12,7 @@ from crawlstocks.items.netease163 import CHDDataItem
 from crawlstocks.exceptions import DownloadException
 from crawlstocks.items import CrawlErrorItem
 
-class CrawlChdDataSpider(scrapy.Spider):
+class CrawlChdDataSpider(Spider):
     name = 'netease163.chddata'
     allowed_domains = ['quotes.money.163.com']
     debug = False

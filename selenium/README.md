@@ -4,7 +4,7 @@ title: 浏览器自动化
 
 date: 2019-04-30 11:19:02
 tags: [selenium]
-categories: [stock]
+categories: [stocktech]
 
 ---
 

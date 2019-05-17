@@ -9,6 +9,8 @@
 # @date 2019-05-07 15:31:37
 
 import scrapy
+from scrapy.spiders import Spider
+
 import demjson
 import datetime, time
 import re
@@ -24,7 +26,7 @@ from crawlstocks.items.tencent import CashFlowItem
 from crawlstocks.utils.common import cookie_dict, code_to_symbol
 from crawlstocks.utils.common import get_every_days, is_stock_opening
 
-class CrawlStockCodeSpider(scrapy.Spider):
+class CrawlStockCodeSpider(Spider):
     name = 'tencent.stockcode'
     allowed_domains = [ 'stock.gtimg.cn' ]
     debug = False
@@ -63,7 +65,7 @@ class CrawlStockCodeSpider(scrapy.Spider):
 
 
 # TODO cookie not working, so with selenium work together.
-class CrawlTickDetailSpider(scrapy.Spider):
+class CrawlTickDetailSpider(Spider):
     name = 'tencent.tickdetail'
 
     allowed_domains = [ 'gu.qq.com', 'stock.gtimg.cn' ]
@@ -224,7 +226,7 @@ class CrawlTickDetailSpider(scrapy.Spider):
 #####################################################################################
 
 
-class CrawlRealtimeQuotaSpider(scrapy.Spider):
+class CrawlRealtimeQuotaSpider(Spider):
     name = 'tencent.realtimequota'
 
     allowed_domains = [ 'qt.gtimg.cn' ]
@@ -337,7 +339,7 @@ class CrawlRealtimeQuotaSpider(scrapy.Spider):
 #####################################################################################
 
 
-class CrawlCashFlowSpider(scrapy.Spider):
+class CrawlCashFlowSpider(Spider):
     name = 'tencent.cashflow'
 
     allowed_domains = [ 'qt.gtimg.cn' ]
@@ -424,7 +426,7 @@ class CrawlCashFlowSpider(scrapy.Spider):
 
 #####################################################################################
 
-class CrawlTapeReadingSpider(scrapy.Spider):
+class CrawlTapeReadingSpider(Spider):
     name = 'tencent.tapereading'
 
     allowed_domains = [ 'qt.gtimg.cn' ]

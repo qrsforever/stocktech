@@ -54,18 +54,18 @@ class LatestQuotaPipeline(object):
 
         if sell_p_rate >= 73 or sell_p_rate <= 27:
             if time.time() - self.rec_time < 20: return item
-            if item['b_p'] == item['price']:
-                title="看涨提醒"
-                up = 1
-            elif item['a_p'] == item['price']:
-                title="看跌提醒"
-                up = -1
+            if item['b_p'] >= item['price']:
+                title = "看涨提醒"
+                predict = 1
+            elif item['a_p'] <= item['price']:
+                title = "看跌提醒"
+                predict = -1
             else:
-                title="未知提醒"
-                up = 0
+                title = "未知提醒"
+                predict = 0
             body = """<html><body>
             <h2>{}</h2>
-            <table align='center' cellpadding='10' cellspacing="6">
+            <table align='center' cellpadding='10' cellspacing="4">
                 <tr><td>{}</td><td>{}</td></tr>
                 <tr><td>{}</td><td>{}</td></tr>
                 <tr><td>{}</td><td>{}</td></tr>
@@ -102,7 +102,7 @@ class LatestQuotaPipeline(object):
                     item['name'], item['code'],
                     item['price'], item['settlement'],
                     item['datetime'].strftime('%H:%M:%S')),
-                'predict': up,
+                'predict': predict,
                 'body': payload
                 }, ensure_ascii=False))
             self.rec_time = time.time()
