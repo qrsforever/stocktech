@@ -70,7 +70,7 @@ class CrawlTickDetailSpider(Spider):
 
     allowed_domains = [ 'gu.qq.com', 'stock.gtimg.cn' ]
 
-    debug = True
+    debug = False
     selenium = True
 
     custom_settings = {
@@ -139,7 +139,9 @@ class CrawlTickDetailSpider(Spider):
                 beg = begin
                 try:
                     last = datetime.datetime.strptime(self.codes_last_date[code], '%Y%m%d')
-                    if last and last > begin:
+                    print(last)
+                    print(beg)
+                    if last and last > beg:
                         beg = last
                 except:
                     pass

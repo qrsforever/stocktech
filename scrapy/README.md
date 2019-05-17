@@ -98,8 +98,12 @@ scrapy startproject crawlstocks .
 
 ```shell
 cd selenium; ./main.py crawl_tencent_optional
-scrapy crawl tencent.tickdetail -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
+scrapy crawl tencent.tickdetail
 ```
+
+**如果不和selenium配合, 需要先开代理, 缓冲异步页面**
+
+    sudo docker run -p 8050:8050 scrapinghub/splash
 
 ## tencent.stockcode
 
@@ -118,16 +122,24 @@ cat: {a, b, ash, asz, bsh, bsz}
 
 ```shell
 cd selenium; ./main.py crawl_tencent_optional
-scrapy crawl tencent.realtimequota -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
+scrapy crawl tencent.realtimequota
 ```
 
 ## tencent.cashflow
 
 爬取盘口交易, 现金流
 
+```shell
+scrapy crawl tencent.cashflow
+```
+
 ## tencent.tapereading
 
 爬取盘口交易, 大单小单百分比
+
+```shell
+scrapy crawl tencent.tapereading
+```
 
 ## sina.latestquota
 
@@ -135,13 +147,16 @@ scrapy crawl tencent.realtimequota -a codesfile=/media/lidong/udisk/stocktech/fi
 
 ```shell
 cd selenium; ./main.py crawl_tencent_optional
-scrapy crawl sina.latestquota -a codesfile=/media/lidong/udisk/stocktech/files/gu_qq_optionals.txt
+scrapy crawl sina.latestquota
 ```
 
 ## xinhuanet.leardernews
 
 爬取国家最高领导的新闻(新华网)
 
+```shell
+scrapy crawl xinhuanet.leardernews
+```
 
 # 数据网站
 
