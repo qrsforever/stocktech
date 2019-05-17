@@ -112,7 +112,7 @@ public class ReminderMqttService extends Service {
                 sendBroadcast(intent);
             }catch (UnsupportedEncodingException e) {
                 Log.e(TAG, "Exception Occured", e);
-            }   
+            }
         }
 
         @Override

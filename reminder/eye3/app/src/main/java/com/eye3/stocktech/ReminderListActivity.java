@@ -16,8 +16,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
+import android.media.RingtoneManager;
+import android.media.AudioManager;
+import android.media.Ringtone;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,12 +45,20 @@ public class ReminderListActivity extends Activity {
     private Intent mIntent = null;
     private MessageReceiver mMsgReceiver = null;
 
+    private AudioManager mAudioManager = null;
+    private Vibrator mVibrator = null;
+    private Ringtone mRingtone = null;
+    private long mLastNotifyTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate " + this.hashCode());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         mContext = this;
+
+        mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
  		mMsgReceiver = new MessageReceiver();
 		IntentFilter intentFilter = new IntentFilter();
@@ -89,15 +101,53 @@ public class ReminderListActivity extends Activity {
             Log.d(TAG, "payload = " + payload);
             Map<String, Object> map = JSON.parseObject(intent.getStringExtra("payload"));
             HashMap<String, Object> listmap = new HashMap<String, Object>();
-            if (1 == (int)map.get("predict"))
-                listmap.put("item_image", R.drawable.up);
-            else
-                listmap.put("item_image", R.drawable.down);
+            switch ((int)map.get("predict")) {
+                case 1:
+                    listmap.put("item_image", R.drawable.ox);
+                    break;
+                case 0:
+                    listmap.put("item_image", R.drawable.frog);
+                    break;
+                case -1:
+                    listmap.put("item_image", R.drawable.bear);
+                    break;
+            }
             listmap.put("item_title", map.get("title"));
             listmap.put("item_brief", map.get("brief"));
             listmap.put("item_body", map.get("body"));
             mListItem.add(listmap);
             mItemAdapter.notifyDataSetChanged();
+            ringNotify();
+        }
+    }
+
+    public void ringNotify() {
+        if (System.currentTimeMillis() - mLastNotifyTime < 1000)
+            return;
+
+        try {
+            mLastNotifyTime = System.currentTimeMillis();
+
+            if (mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                Log.e("TAG", "Mute Setting");
+                return;
+            }
+            long[] pattern = new long[] { 0, 180, 80, 120 };
+            mVibrator.vibrate(pattern, -1);
+
+            if (mRingtone == null) {
+                Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                mRingtone = RingtoneManager.getRingtone(mContext, notificationUri);
+                if (mRingtone == null) {
+                    Log.d(TAG, "Cant find ringtone at:" + notificationUri.getPath());
+                    return;
+                }
+            }
+
+            if (!mRingtone.isPlaying())
+                mRingtone.play();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -11,11 +11,12 @@
 from crawlstocks.utils.send import send_mail
 from crawlstocks.utils.send import send_mqtt
 
-import json
+import json, time
 
 class LatestQuotaPipeline(object):
 
     topic = '/stocktech/reminder/latestquota'
+    rec_time = time.time()
 
     def process_item(self, item, spider):
         buy1 = item['b1_v'] * item['b1_p']  # buy
@@ -40,6 +41,9 @@ class LatestQuotaPipeline(object):
             spider.logger.warn('sell volum is 0')
             return item
 
+        buy_vol2_rate = round(100 * (item['b1_v'] + item['b2_v']) / total_buy_vol, 2)
+        sell_vol2_rate = round(100 * (item['a1_v'] + item['a2_v']) / total_sell_vol, 2)
+
         total = total_buy_vol + total_sell_vol
         buy = (buy1 + buy2 + buy3 + buy4 + buy5) / total_buy_vol
         sell = (sell1 + sell2 + sell3 + sell4 + sell5) / total_sell_vol
@@ -48,11 +52,16 @@ class LatestQuotaPipeline(object):
         buy_p_rate = round((item['price'] - buy) * 100 / (sell - buy), 2)
         sell_p_rate = round((sell-item['price']) * 100 / (sell - buy), 2)
 
-        if True or sell_p_rate >= 73 or sell_p_rate <= 27:
-            title="看涨提醒"
-            up = 1
-            if sell_p_rate > buy_p_rate:
+        if sell_p_rate >= 73 or sell_p_rate <= 27:
+            if time.time() - self.rec_time < 20: return item
+            if item['b_p'] == item['price']:
+                title="看涨提醒"
+                up = 1
+            elif item['a_p'] == item['price']:
                 title="看跌提醒"
+                up = -1
+            else:
+                title="未知提醒"
                 up = 0
             body = """<html><body>
             <h2>{}</h2>
@@ -63,6 +72,8 @@ class LatestQuotaPipeline(object):
                 <tr><td>{}</td><td>{}</td></tr>
                 <tr><td>{}</td><td>{}</td></tr>
                 <tr><td>{}</td><td>{}</td></tr>
+                <tr><td>{}</td><td>{}%</td></tr>
+                <tr><td>{}</td><td>{}%</td></tr>
                 <tr><td>{}</td><td>{}%</td></tr>
                 <tr><td>{}</td><td>{}%</td></tr>
                 <tr><td>{}</td><td>{}%</td></tr>
@@ -80,6 +91,8 @@ class LatestQuotaPipeline(object):
                 '卖量比', sell_v_rate,
                 '买价比', buy_p_rate,
                 '卖价比', sell_p_rate,
+                '前二买', buy_vol2_rate,
+                '前二卖', sell_vol2_rate,
                 '时间', item['datetime'].strftime('%Y%m%d-%H:%M:%S'))
             send_mail(payload, 'html')
 
@@ -92,4 +105,5 @@ class LatestQuotaPipeline(object):
                 'predict': up,
                 'body': payload
                 }, ensure_ascii=False))
+            self.rec_time = time.time()
         return item

@@ -27,7 +27,7 @@ class CashFlowPipeline(object):
 
 class TapeReadingPipeline(object):
 
-    rec_time = time.time() 
+    rec_time = time.time()
 
     def process_item(self, item, spider):
         if item['b_big_deal'] > 45 or \
