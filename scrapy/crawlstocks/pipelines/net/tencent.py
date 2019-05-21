@@ -36,13 +36,13 @@ class TapeReadingPipeline(object):
 
         title = None
         predict = 0
-        if item['b_big_deal'] > 45 or \
+        if item['b_big_deal'] > 55 or \
                 (item['b_big_deal'] > 15 and \
                 item['b_big_deal'] + item['b_small_deal'] > 70):
             title = "大买单提醒"
             predict = 1
 
-        if item['s_big_deal'] > 45 or \
+        if item['s_big_deal'] > 55 or \
                 (item['s_big_deal'] > 15 and \
                 item['s_big_deal'] + item['s_small_deal'] > 70):
             title = "大卖单提醒"

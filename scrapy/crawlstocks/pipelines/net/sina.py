@@ -52,7 +52,8 @@ class LatestQuotaPipeline(object):
         buy_p_rate = round((item['price'] - buy) * 100 / (sell - buy), 2)
         sell_p_rate = round((sell-item['price']) * 100 / (sell - buy), 2)
 
-        if sell_p_rate >= 73 or sell_p_rate <= 27:
+        if (buy_p_rate <= 27 and buy_vol2_rate >= 50 and buy_v_rate >= 73) or \
+                (sell_p_rate <= 27 and sell_vol2_rate >= 50 and sell_v_rate >= 73):
             if time.time() - self.rec_time < 20: return item
             if item['b_p'] >= item['price']:
                 title = "看涨提醒"

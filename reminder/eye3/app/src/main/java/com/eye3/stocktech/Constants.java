@@ -11,7 +11,8 @@ package com.eye3.stocktech;
 
 public final class Constants {
 
-    public final static String HOST     = "tcp://192.168.1.222:1883";
+    // public final static String HOST     = "tcp://192.168.1.222:1883";
+    public final static String HOST     = "tcp://10.122.67.99:1883";
     public final static String USERNAME = "stocktech";
     public final static String PASSWORD = "stocktech";
     public final static String CLIENTID = "app000001"; // Build.SERIAL;
