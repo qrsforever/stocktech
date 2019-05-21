@@ -13,7 +13,7 @@ categories: [stocktech]
 ### Install
 
     sudo pip3 install -U jedi
-    sudo pip3 install -U jupyter
+    sudo pip3 install -U jupyter pyside2 pyqt5
     sudo pip3 install -U jupyter_contrib_nbextensions jupyter_nbextensions_configurator
     sudo pip3 install -U jupyterthemes
     sudo jupyter contrib nbextension install
