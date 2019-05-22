@@ -31,8 +31,7 @@ categories: [stocktech]
 
 ### use in vim
 
-    [vim-config](https://github.com/qrsforever/vim)
-
+配置请参考我的[vim配置][1]
 
 ### use in console
 
@@ -40,4 +39,7 @@ categories: [stocktech]
 
 
 ## Other
+
+
+[1]: https://github.com/qrsforever/vim/blob/master/bundle/.configs/jupyter-vim_conf.vim
 

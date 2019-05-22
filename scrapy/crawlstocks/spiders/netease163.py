@@ -29,26 +29,25 @@ class CrawlChdDataSpider(Spider):
                 }
             }
 
-    # def __init__(self, conf, *args, **kwargs):
-    #     super(Quotesmoney163Spider, self).__init__(*args, **kwargs)
-    #     self.conf = conf
-
-    # @classmethod
-    # def from_crawler(cls, crawler, *args, **kwargs):
-    #     spider = cls(crawler.settings, *args, **kwargs)
-    #     spider._set_crawler(crawler)
-    #     return spider
+    finished = False
 
     FIELDS = "TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP"
     URL = 'http://quotes.money.163.com/service/chddata.html?'
 
     def start_requests(self):
         self.client = MongoClient(self.settings.get('DB_URI',
-            'mongodb://localhost:27017/'))
+            'mongodb://localhost:27027/'))
         db = self.client[self.settings.get('DB_NAME', 'stocktech')]
         self.err_col = db[self.settings.get('DB_ERRORS_COLLECTION_NAME', 'errors')]
-        start = self.settings.get('DATETIME_START'),
-        end = self.settings.get('DATETIME_END'),
+
+        try:
+            with open(self.settings.get('CHDDATE_LAST_DATE_FILE'), 'r') as f:
+                start = f.readline().strip('\n')
+        except Exception as e:
+            self.logger.warn(e)
+            start = self.settings.get('DATETIME_START')
+
+        end = datetime.now().strftime('%Y%m%d') 
         col = db[self.settings.get('DB_CODES_COLLECTION_NAME', 'codes')]
         count = 0
         total = col.count()
@@ -64,6 +63,10 @@ class CrawlChdDataSpider(Spider):
             count += 1
             yield scrapy.Request(link, callback=self.parse_csv, errback=self.err_back)
             if self.debug: break
+    
+        self.lastdata = end
+        self.finished = True
+
 
     def parse_csv(self, response):
         item = CHDDataItem()
@@ -115,6 +118,9 @@ class CrawlChdDataSpider(Spider):
 
     def closed(self, reason):
         self.logger.info(reason)
+        if self.finished:
+            with open(self.settings.get('CHDDATE_LAST_DATE_FILE'), 'w') as f:
+                f.write(self.lastdata);
         self.client.close()
 
 

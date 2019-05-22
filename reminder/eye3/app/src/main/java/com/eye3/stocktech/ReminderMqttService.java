@@ -87,6 +87,12 @@ public class ReminderMqttService extends Service {
                 public void onFailure(IMqttToken arg0, Throwable arg1) {
                     Toast.makeText(getApplicationContext(), "Connnect Failure",
                             Toast.LENGTH_LONG).show();
+                    try {
+                        Thread.sleep(3000);
+                        onConnect();
+                    } catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
                 }
             });
         } catch (MqttException e) {
@@ -99,6 +105,12 @@ public class ReminderMqttService extends Service {
         public void connectionLost(Throwable cause) {
             Toast.makeText(getApplicationContext(), "Connnect Lost",
                     Toast.LENGTH_LONG).show();
+            try {
+                Thread.sleep(3000);
+                onConnect();
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
 
         @Override

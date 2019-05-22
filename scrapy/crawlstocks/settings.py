@@ -123,6 +123,7 @@ STOCK_URLS_FILE = os.path.join(FILE_DIR, 'stock_urls.txt')
 STOCK_CWZB_FILE = os.path.join(FILE_DIR, 'stock_cwzb.txt')
 
 TICKDETAIL_LAST_DATE_FILE = os.path.join(FILE_DIR, 'tickdetail_last_date.txt')
+CHDDATE_LAST_DATE_FILE = os.path.join(FILE_DIR, 'netease163.chddata.last_date.txt')
 
 # MongoDB
 
@@ -141,7 +142,7 @@ DB_LEADERNEWS_COLLECTION_NAME = 'leadernews'
 # Request
 
 DATETIME_START = '20140101'
-DATETIME_END = '20190426'
+# DATETIME_END = '20190426'
 
 # 雄安新区板块
 #  BLOCKINFO_XIONGANXINQUE = '003813'
